@@ -1,169 +1,56 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Gallary</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <title>My Gal</title>
   <script src="reddit.js-master/reddit.min.js"></script>
 </head>
-  <style>
-    *,
-*:before,
-*:after {
-   -moz-box-sizing: border-box;
-   box-sizing: border-box;
-}
+<body>
+<header class="island">
+ <h1>Liam's gallery</h1>
+ <form class="js-form-search form-search" action="/search" method="get" role="search">
+    <label for="query">Search:</label>
+    <input type="search" name="query" id="query" placeholder="Search" required />
+    <input type="submit" value="Search" />
+ </form>
+</header>
+<div class="container">
+</div>
+<script>
+  (function () {
+    var container = document.querySelector(".container");
+    reddit.top("aww").t("day").limit(10).fetch(function (res) {
+      for (var i = 0; i < res.data.children.length; i++) {
+        var awwData = res.data.children[i].data;
+        var thumbnail = document.createElement("img");
+        var aww = document.createElement("img");
+        var row = document.createElement("div");
+        var left = document.createElement("div");
+        var right = document.createElement("div");
+        var link = document.createElement("a");
 
-.island {
-   display: block;
-   max-width: 1024px;
-   margin: 0 auto;
-}
+        row.className = "row";
+        left.className = "col-xs-4";
+        thumbnail.setAttribute("src", awwData.thumbnail);
 
-body {
-   background-color: #FFA500;
-   color: #000000;
-   font-family: Arial, Calibri, Helvetica, sans-serif;
-}
+        link.setAttribute("href", "http://www.reddit.com" + awwData.permalink);
+        link.innerText = awwData.title;
+        left.appendChild(thumbnail);
+        left.appendChild(link);
 
-h1 {
-   display: block;
-   color: #000000;
-}
-
-a {
-   color: #000000;
-}
-.visually-hidden {
-   border: 0;
-   clip: rect(0 0 0 0);
-   height: 1px;
-   margin: -1px;
-   overflow: hidden;
-   padding: 0;
-   position: absolute;
-   width: 1px;
-}
-
-.hidden {
-   display: none !important;
-}
-
-.clearfix:before,
-.clearfix:after {
-   content: " ";
-   display: table;
-}
-
-.clearfix:after {
-   clear: both;
-}
-
-.thumbnails__list,
-.thumbnails__pager
-{
-   margin: 0;
-   padding: 0;
-   list-style-type: none;
-}
-
-.thumbnails__list li
-{
-   display: inline-block;
-   width: 19%;
-   margin-top: 1%;
-   margin-right: 1%;
-}
-
-.thumbnail
-{
-   width: 100%;
-}
-
-.thumbnail:hover,
-.thumbnail:focus
-{
-   border: 1px solid #FCB720;
-   opacity: 0.7;
-}
-
-.thumbnails__pager
-{
-   text-align: right;
-   margin: 0.5em 0;
-}
-
-.thumbnails__pager li
-{
-   display: inline;
-}
-
-.thumbnails__pager a
-{
-   margin: 0 0.2em;
-   color: #FFFFFF;
-   text-decoration: none;
-}
-
-.thumbnails__pager a.current,
-.thumbnails__pager a:hover,
-.thumbnails__pager a:focus
-{
-   color: #FCB720;
-   text-decoration: underline;
-}
-.form-search
-{
-   margin: 0.5em 0;
-   text-align: right;
-}
-
-.form-search #query
-{
-   padding: 0.2em;
-}
-
-.form-search input
-{
-   color: #000000;
-}
-
-.thumbnails
-{
-   border-bottom: 3px solid #FFFFFF;
-}
-
-.copyright
-{
-   margin-top: 0.5em;
-   margin-bottom: 0.5em;
-   text-align: right;
-}
-  </style>
-  <body>
-    <header class="island">
-      <h1>Liam's Photo Gallary</h1>
-      <form class="Liam's Photo Gallary" action="/search" method="get" role="search">
-        <label for="query">Search:</label>
-        <input type="search" name="query" id="query" placeholder="Search now!" required />
-        <input type="submit" value="Search" />
-      </form>
-    </header>
-  <div class="island">
-   <div class="js-gallery gallery">
-      <img src="" class="js-gallery__image" />
-      <button class="js-gallery__arrow--left gallery__arrow gallery__arrow--left">
-         <span class="visually-hidden">Previous photo</span>
-      </button>
-      <button class="js-gallery__arrow--right gallery__arrow gallery__arrow--right">
-         <span class="visually-hidden">Next photo</span>
-      </button>
-   </div>
-  </div>
-  <div class="island thumbnails">
-   <ul class="js-thumbnails__list thumbnails__list"></ul>
-   <ol class="js-thumbnails__pager thumbnails__pager"></ol>
-  </div>
-  </body>
+        row.appendChild(left);
+        right.className = "col-xs-8";
+        aww.className = "img-responsive";
+        aww.setAttribute("src", awwData.url);
+        right.appendChild(aww);
+        row.appendChild(right);
+        container.appendChild(row);
+      }
+    });
+  })();
+</script>
+</body>
 </html>
