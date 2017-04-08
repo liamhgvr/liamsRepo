@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
   <title>My Gallary</title>
   <meta charset="utf-8">
@@ -10,24 +10,14 @@
   <script src="reddit.js-master/reddit.min.js"></script>
 </head>
 <body>
-<header class="island">
- <h1>Liam's gallery</h1>
- <form class="js-form-search form-search" action="/search" method="get" role="search">
-    <label for="query">Search:</label>
-    <input type="search" name="query" id="query" placeholder="Search" required />
-    <input type="submit" value="Search" />
- </form>
-</header>
-<div class="container"></div>
-<script>
-
-    (function () {
-
-    var container = document.querySelector(".container");
-
-    reddit.top("aww").t("day").limit(10).fetch(function (res) {
-      for (var i = 0; i < res.data.children.length; i++) {
-
+    <header class="island">
+     <h1>Liam's gallery</h1>
+         <form class="js-form-search form-search" action="/search" method="get" role="search">
+            <label for="query">Search:</label>
+            <input type="search" name="query" id="query" placeholder="Search" required />
+            <input type="submit" value="Search" />
+         </form>
+    </header>
         var awwData = res.data.children[i].data;
         var thumbnail = document.createElement("img");
         var aww = document.createElement("img");
@@ -55,6 +45,4 @@
       }
     });
   })();
-</script>
 </body>
-</html>
