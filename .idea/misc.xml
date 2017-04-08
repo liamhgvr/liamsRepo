@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectDictionaryState">
+    <dictionary name="liam" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Python</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Buildout</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 2.7.10 (/System/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7)" project-jdk-type="Python SDK" />
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings is-module-sdk="true">
+        <envs>
+          <env key="DJANGO_SETTINGS_MODULE" value="platform_ui_automation.config.orm_settings" />
+          <env key="ENCRYPTED_FIELDS_KEYDIR" value="/Users/liam/git/fieldkeys" />
+          <env key="PYTHONUNBUFFERED" value="1" />
+          <env key="RUN_LOCAL_MACHINE" value="True" />
+        </envs>
+        <option name="myUseModuleSdk" value="true" />
+        <option name="myEnvs">
+          <map>
+            <entry key="DJANGO_SETTINGS_MODULE" value="platform_ui_automation.config.orm_settings" />
+            <entry key="ENCRYPTED_FIELDS_KEYDIR" value="$USER_HOME$/git/fieldkeys" />
+            <entry key="PYTHONUNBUFFERED" value="1" />
+            <entry key="RUN_LOCAL_MACHINE" value="True" />
+          </map>
+        </option>
+      </console-settings>
+    </option>
+  </component>
+</project>

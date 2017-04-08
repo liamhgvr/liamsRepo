@@ -1,0 +1,45 @@
+{
+  "name": "reddit.js",
+  "version": "0.1.3",
+  "description": "Reddit API wrapper for the browser",
+  "keywords": [
+    "Browser",
+    "Reddit",
+    "API",
+    "CORS"
+  ],
+  "main": "reddit.min.js",
+  "author": "Sahil Muthoo <sahil.muthoo@gmail.com> (https://www.sahilm.com)",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.githubusercontent.com/sahilm/reddit.js/master/LICENSE"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sahilm/reddit.js.git"
+  },
+  "devDependencies": {
+    "mocha": "2.2.1",
+    "chai": "2.2.0",
+    "testling": "1.7.1",
+    "uglify-js": "2.4.17",
+    "jshint": "2.6.3",
+    "phantomjs": "1.9.16",
+    "bower": "1.4.1"
+  },
+  "testling": {
+    "harness": "mocha-bdd",
+    "scripts": [
+      "spec/util/sinon.js",
+      "spec/util/sinon-ie.js",
+      "reddit.min.js"
+    ],
+    "files": "spec/*.js"
+  },
+  "scripts": {
+    "test": "jshint reddit.js spec/*.js && testling",
+    "minify": "uglifyjs reddit.js --compress --lint --screw-ie8 --comments --output reddit.min.js"
+  }
+}
