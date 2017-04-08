@@ -2,10 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <title>My Gallary</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Gal</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <script src="reddit.js-master/reddit.min.js"></script>
 </head>
 <body>
@@ -17,13 +18,16 @@
     <input type="submit" value="Search" />
  </form>
 </header>
-<div class="container">
-</div>
+<div class="container"></div>
 <script>
-  (function () {
+
+    (function () {
+
     var container = document.querySelector(".container");
+
     reddit.top("aww").t("day").limit(10).fetch(function (res) {
       for (var i = 0; i < res.data.children.length; i++) {
+
         var awwData = res.data.children[i].data;
         var thumbnail = document.createElement("img");
         var aww = document.createElement("img");
