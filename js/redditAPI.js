@@ -1,6 +1,19 @@
-(function () {
+var item = "a";
+
+$(document).ready(function(item){
+    console.log("hello");
+    $("button").click(function(){
+        item = $("#q").val();
+    });
+});
+
+(function (item) {
+    if (item === undefined) {
+          item = "pizza";
+    }
+    console.log(item);
     var container = document.querySelector(".container");
-    reddit.top("aww").t("day").limit(10).fetch(function (res) {
+    reddit.top(item).t("day").limit(10).fetch(function (res) {
       for (var i = 0; i < res.data.children.length; i++) {
         var awwData = res.data.children[i].data;
         var thumbnail = document.createElement("img");
