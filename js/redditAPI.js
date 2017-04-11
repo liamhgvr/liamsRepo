@@ -1,16 +1,17 @@
-var item = "a";
 
-$(document).ready(function(item){
+(function () {
     console.log("hello");
-    $("button").click(function(){
-        item = $("#q").val();
-    });
-});
 
-(function (item) {
-    if (item === undefined) {
+    var item;
+
+    $("button").click(function(item){
+        item = "pool";  // $("#q").val();
+        });
+
+    if (item == undefined) {
           item = "pizza";
-    }
+    };
+
     console.log(item);
     var container = document.querySelector(".container");
     reddit.top(item).t("day").limit(10).fetch(function (res) {
