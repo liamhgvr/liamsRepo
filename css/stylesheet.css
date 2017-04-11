@@ -1,9 +1,9 @@
 body {
-    background-color: #CC0000;
+    background-color: #006ecc;
 }
 
 h1 {
-   background-color: #27cc00;
+   box-shadow: -7px -8px black;
 }
 
 .container {
@@ -13,26 +13,37 @@ h1 {
     padding-left: 80px;
 }
 
-.thumbnail {
+/* Tooltip container */
+.col-xs-4 {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
-.thumbnail .tooltiptext {
+/* Tooltip text */
+.col-xs-4 .tooltip {
     visibility: hidden;
     width: 120px;
-    background-color: black;
-    color: #fff;
+    background-color: grey;
+    color: #000000;
     text-align: center;
-    border-radius: 6px;
     padding: 5px 0;
+    border-radius: 6px;
+    top: -5px;
+    left: 105%;
 
-    /* Position the tooltip */
+    /* Position the tooltip text - see examples below! */
     position: absolute;
     z-index: 1;
 }
 
-.thumbnail:hover .tooltiptext {
+/* Show the tooltip text when you mouse over the tooltip container */
+.col-xs-4:hover .tooltip {
     visibility: visible;
+}
+
+button {
+    color: white;
+    background-color: black;
+    padding: 8px 20px;
 }

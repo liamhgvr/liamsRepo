@@ -12,20 +12,19 @@
 
         row.className = "row";
         left.className = "col-xs-4";
-        title.className = "tooltiptext";
-        thumbnail.className = "thumbnail";
+        title.className = "tooltip";
         thumbnail.setAttribute("src", awwData.thumbnail);
 
         link.setAttribute("href", "http://www.reddit.com" + awwData.permalink);
         link.setAttribute("target", "_blank");
         title.innerText = awwData.title;
-        left.appendChild(link);
-        link.appendChild(thumbnail);
-        thumbnail.appendChild(title);
-
-        row.appendChild(left);
         aww.className = "img-responsive";
         aww.setAttribute("src", awwData.url);
+
+        link.appendChild(thumbnail);
+        left.appendChild(title);
+        left.appendChild(link);
+        row.appendChild(left);
         container.appendChild(row);
       }
     });
