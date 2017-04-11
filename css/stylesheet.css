@@ -1,0 +1,38 @@
+body {
+    background-color: #CC0000;
+}
+
+h1 {
+   background-color: #27cc00;
+}
+
+.container {
+    padding-top: 50px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    padding-left: 80px;
+}
+
+.thumbnail {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.thumbnail .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.thumbnail:hover .tooltiptext {
+    visibility: visible;
+}

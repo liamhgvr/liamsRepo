@@ -9,6 +9,5 @@
         expect(res.data.children.length).to.eql(5);
       });
     });
-
   });
 })();
