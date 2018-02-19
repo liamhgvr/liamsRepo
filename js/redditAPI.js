@@ -1,21 +1,13 @@
+function userSelect(item) {
+    console.log("hello API");
 
-$(document).ready(function () {
-    console.log("hello");
-
-    var word;
-
-    $('button').click(function(){
-        word = $('input').val();
-        console.log(word);
-    });
-
-    if (word == undefined) {
-          word = "cats";
+    if (item == undefined || item == '') {
+          item = "cats";
     };
 
-    console.log(word);
+    console.log("Word:" + item);
     var container = document.querySelector(".container");
-    reddit.top(word).t("day").limit(10).fetch(function (res) {
+    reddit.top(item).t("day").limit(10).fetch(function (res) {
       for (var i = 0; i < res.data.children.length; i++) {
         var awwData = res.data.children[i].data;
         var thumbnail = document.createElement("img");
@@ -43,4 +35,4 @@ $(document).ready(function () {
         container.appendChild(row);
       }
     });
-  });
+  };
