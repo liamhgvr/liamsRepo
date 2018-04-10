@@ -1,5 +1,7 @@
 package MMN12;
 
+import common.validations;
+
 public class Date extends validations {
 
     // declarations
@@ -37,19 +39,19 @@ public class Date extends validations {
 
     public int getYear(){ return _year; }
 
-    public void setDay(int newDay){
+    public void set_day(int newDay){
         if (isValidDate(newDay, _month, _year)){
             _day = newDay;
         }
     }
 
-    public void setMonth(int newMonth){
+    public void set_month(int newMonth){
         if (isValidDate(_day, newMonth, _year)){
             _month = newMonth;
         }
     }
 
-    public void setYear(int newYear){
+    public void set_year(int newYear){
         if (isValidDate(_day, _month, newYear)){
             _year = newYear;
         }
@@ -84,7 +86,6 @@ public class Date extends validations {
         return "" + _day + "/" + _month + "/" + _year + "";
     }
 
-    // given
     private static int calculateDate(int day, int month, int year){
         if (month < 3){
             year--;

@@ -1,5 +1,7 @@
 package MMN12;
 
+import common.validations;
+
 public class Trip extends validations {
 
     // declarations
@@ -22,7 +24,7 @@ public class Trip extends validations {
 
         _guideName = isValidName(guideName);
 
-        _noOfCountries = isValidNumOfCountrues(countryNum);
+        _noOfCountries = isValidNumOfCountries(countryNum);
         _noOfTravellers = isValidNumOfTravellers(travellersNum);
 
         _departureDate = new Date(depDay, depMonth, depYear);
@@ -36,20 +38,23 @@ public class Trip extends validations {
     }
 
     public Trip(Trip other) {
-        Trip trip = new Trip(other);
-    }
 
-    // methods
-    public String getGuildeName() {
-        return _guideName;
-    }
+        _guideName = isValidName(other.getGuideName());
 
-    public void setGuildeName(String newName) {
-        if (!newName.isEmpty()) {
-            _guideName = newName;
+        _noOfCountries = isValidNumOfCountries(other.getNoOfCountries());
+        _noOfTravellers = isValidNumOfTravellers(other.getNoOfTravellers());
+
+        _departureDate = other.getDepartureDate();
+        _returningDate = other.getReturningDate();
+
+        // set dates to default if error
+        if (_departureDate.after(_returningDate)) {
+            _departureDate = new Date();
+            _returningDate = new Date();
         }
     }
 
+    // Get methods
     public String getGuideName() {
         return _guideName;
     }
@@ -58,41 +63,57 @@ public class Trip extends validations {
         return _departureDate;
     }
 
-    public void setDepartureDate(Date other) {
-        if (isValidDate(other.getDay(), other.getMonth(), other.getYear()) && _returningDate.after(other)) {
-            _departureDate = new Date(other);
-        }
-    }
-
     public Date getReturningDate() {
         return _returningDate;
-    }
-
-    public void setReturningDate(Date other) {
-        if (isValidDate(other.getDay(), other.getMonth(), other.getYear()) && _departureDate.before(other)) {
-            _returningDate = new Date(other);
-        }
     }
 
     public int getNoOfCountries() {
         return _noOfCountries;
     }
 
-    public void setNoOfCountries(int newNoOfCountries) {
+    public int getNoOfTravellers() {
+        return _noOfTravellers;
+    }
+
+    // Set methods
+
+    public void set_guideName(String newName){
+        if (!newName.isEmpty()){
+            _guideName = newName;
+        }
+    }
+
+    public void set_departureDate(Date other) {
+        if (isValidDate(other.getDay(), other.getMonth(), other.getYear()) && _returningDate.after(other)) {
+            _departureDate = new Date(other);
+        }
+    }
+
+    public void set_returningDate(Date other) {
+        if (isValidDate(other.getDay(), other.getMonth(), other.getYear()) && _departureDate.before(other)) {
+            _returningDate = new Date(other);
+        }
+    }
+
+    public void set_noOfCountries(Date other) {
+        if (isValidDate(other.getDay(), other.getMonth(), other.getYear()) && _departureDate.before(other)) {
+            _returningDate = new Date(other);
+        }
+    }
+
+    public void set_noOfCountries(int newNoOfCountries) {
         if (newNoOfCountries < MAX_COUNTRIES && newNoOfCountries > 0) {
             _noOfCountries = newNoOfCountries;
         }
     }
 
-    public int getNoOfTravellers() {
-        return _noOfTravellers;
-    }
-
-    public void setNoOfTravellers(int newNoOfTravellers) {
+    public void set_noOfTravellers(int newNoOfTravellers) {
         if (newNoOfTravellers < MAX_TRAVELLERS && newNoOfTravellers > 0) {
             _noOfCountries = newNoOfTravellers;
         }
     }
+
+    // Operation methods
 
     public boolean equals(Trip other) {
         return _guideName.equals(other.getGuideName()) && _departureDate.equals(other.getDepartureDate()) &&

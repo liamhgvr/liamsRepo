@@ -1,4 +1,4 @@
-package MMN12;
+package common;
 
 public class validations {
 
@@ -47,7 +47,7 @@ public class validations {
         return name;
     }
 
-    public int isValidNumOfCountrues(int numOfCountries){
+    public int isValidNumOfCountries(int numOfCountries){
         final int MAX_COUNTRIES = 10;
 
         if (numOfCountries > MAX_COUNTRIES){
