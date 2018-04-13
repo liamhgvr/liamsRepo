@@ -1,13 +1,16 @@
 package MMN12;
 
-public class LiamTours {
+import java.util.HashMap;
+import java.util.Map;
+
+public class javaTours {
 
     private final int MAX_TRIPS = 100;
 
     private Trip[] _data;
     private int _noOfTrips;
 
-    public LiamTours() {
+    public javaTours() {
         _data = new Trip[MAX_TRIPS];
         _noOfTrips = 0;
     }
@@ -41,8 +44,8 @@ public class LiamTours {
         return false;
     }
 
-    public int howManyTravellers(){
-        int travellerSum  = 0;
+    public int howManyTravellers() {
+        int travellerSum = 0;
 
         for (Trip a_trip : _data) {
             travellerSum += a_trip.getNoOfTravellers();
@@ -50,7 +53,7 @@ public class LiamTours {
         return travellerSum;
     }
 
-    public int howManyTripDeparture(Date reqDate){
+    public int howManyTripDeparture(Date reqDate) {
         int tripSum = 0;
 
         for (Trip a_trip : _data) {
@@ -61,7 +64,7 @@ public class LiamTours {
         return tripSum;
     }
 
-    public int howManyCars(Date reqDate){
+    public int howManyCars(Date reqDate) {
         int carSum = 0;
 
         for (Trip a_trip : _data) {
@@ -73,34 +76,51 @@ public class LiamTours {
         return carSum;
     }
 
-    public Trip longestTrip(){
+    public Trip longestTrip() {
+        int theLongestTripId = 0;
+        int theLongestTripDuration = 0;
 
         if (_data.length != 0) {
-            int theLongestTripId = 0;
-            int theLongestTripDuration = 0;
-
             for (int i = 0; i < _data.length; i++) {
                 if (_data[i].tripDuration() > theLongestTripDuration) {
                     theLongestTripId = i;
                 }
             }
-            return _data[theLongestTripId];
         }
+        return _data[theLongestTripId];
     }
 
-    public Trip mostPopularGuide(){
+    public String mostPopularGuide() {
+        String popGuide = "0";
 
         if (_data.length != 0) {
-            int theGuideId = 0;
-            int noOfGuides = ;
-            int theGuideTripSum = 0;
 
-            for (int i = 0; i < _data.length; i++) {
-                if (_data[i].getGuideName() > theGuideTripSum) {
-                    theGuideId = i;
+            // Count tripe
+
+            String currGuide = _data[0].getGuideName();
+            HashMap<String, Integer> countGuideTrips = new HashMap<String, Integer>();
+            countGuideTrips.put(currGuide, 1);
+
+            for (Trip trip : _data) {
+                currGuide = trip.getGuideName();
+
+                if (countGuideTrips.containsKey(trip.getGuideName())) {
+                    countGuideTrips.put(currGuide, countGuideTrips.get(currGuide) + 1);
+                } else {
+                    countGuideTrips.put(currGuide, 1);
                 }
             }
-            return _data[theGuideId];
+
+            // Compare trips
+            int maxTrips = 0;
+
+            for (Map.Entry<String, Integer> entry : countGuideTrips.entrySet()) {
+                if (maxTrips == 0 || entry.getValue() > maxTrips) {
+                    maxTrips = entry.getValue();
+                }
+            }
         }
+        // Return the guide with the most trips
+        return popGuide;
     }
 }
