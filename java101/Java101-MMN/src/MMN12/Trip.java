@@ -5,11 +5,11 @@ import common.validations;
 public class Trip extends validations {
 
     // declarations
-    final int MAX_COUNTRIES = 10;
-    final int MAX_TRAVELLERS = 50;
-    final int PRICE_PER_DAY = 250;
-    final int PRICE_PER_COUNTRY = 100;
-    final int BUS_SIZE = 10;
+    private final int MAX_COUNTRIES = 10;
+    private final int MAX_TRAVELLERS = 50;
+    private final int PRICE_PER_DAY = 250;
+    private final int PRICE_PER_COUNTRY = 100;
+    private final int BUS_SIZE = 10;
     final int HIGH_SEASON = 20;
 
     private String _guideName;

@@ -86,7 +86,7 @@ public class Date extends validations {
         return "" + _day + "/" + _month + "/" + _year + "";
     }
 
-    private static int calculateDate(int day, int month, int year){
+    static int calculateDate(int day, int month, int year){
         if (month < 3){
             year--;
             month = month + 12;
