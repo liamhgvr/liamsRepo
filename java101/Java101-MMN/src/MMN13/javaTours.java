@@ -53,9 +53,7 @@ public class javaTours {
         int travellersCount = 0;
 
         if (_noOfTrips > 0){
-            for (Trip trip : _data) {
-                travellersCount += trip.getNoOfTravellers();
-            }
+            for (Trip trip : _data) travellersCount += trip.getNoOfTravellers();
         }
         return travellersCount;
     }

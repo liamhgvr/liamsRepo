@@ -2,8 +2,10 @@ package common;
 
 public class validations {
 
-    public boolean isValidDate(int day, int month, int year) {
+    protected boolean isValidDate(int day, int month, int year) {
 
+        final int MIN_YEAR = 2018;
+        final int MAX_YEAR = 2100;
         final int MAX_MONTH = 12;
         final int FEB = 2;
         final int APR = 4;
@@ -13,22 +15,23 @@ public class validations {
 
         int maxDay = 31;
 
-        // Validate positive
-        if ((year > 0) && (month > 0) && (day > 0)) {
-            // Validate month
-            if (month <= MAX_MONTH) {
-                // Day corner cases
+        // Valid year
+        if ((year >= MIN_YEAR) && (year <= MAX_YEAR)) {
+            // Valid month
+            if ((month <= MAX_MONTH) && (month > 0)) {
+
+                // Max day corner cases
                 if ((month == APR) || (month == JUN) || (month == SEP) || (month == NOV)) {
                     maxDay = 30;
                 } else if ((month == FEB)) {
-                    if ((year % 4 == 0) || (year == 400)) {
+                    if ((year % 4 == 0)) {
                         maxDay = 29;
                     } else {
                         maxDay = 28;
                     }
                 }
-                // Validate day
-                if (day <= maxDay) {
+                // Valid day
+                if ((day <= maxDay) && (day > 0)) {
                     // return True
                     return true;
                 }
@@ -38,28 +41,28 @@ public class validations {
         return false;
     }
 
-    public String isValidName(String name){
+    protected String isValidName(String name) {
         final String DEFAULT_NAME = "NoName";
 
-        if (name.isEmpty()){
+        if (name.isEmpty()) {
             return DEFAULT_NAME;
         }
         return name;
     }
 
-    public int isValidNumOfCountries(int numOfCountries){
+    protected int isValidNumOfCountries(int numOfCountries) {
         final int MAX_COUNTRIES = 10;
 
-        if (numOfCountries > MAX_COUNTRIES){
+        if (numOfCountries > MAX_COUNTRIES || (numOfCountries <= 0)) {
             return MAX_COUNTRIES;
         }
         return numOfCountries;
     }
 
-    public int isValidNumOfTravellers(int numOfTravellers){
+    protected int isValidNumOfTravellers(int numOfTravellers) {
         final int MAX_TRAVELLERS = 50;
 
-        if (numOfTravellers > MAX_TRAVELLERS){
+        if ((numOfTravellers > MAX_TRAVELLERS) || (numOfTravellers <= 0)) {
             return MAX_TRAVELLERS;
         }
         return numOfTravellers;

@@ -5,15 +5,18 @@ import common.validations;
 public class Date extends validations {
 
     // declarations
+    private final int DEFAULT_DAY = 1;
+    private final int DEFAULT_MONTH = 1;
+    private final int DEFAULT_YEAR = 1990;
     private int _day;
     private int _month;
     private int _year;
 
     // constructors
     public Date(){
-        _day = 1;
-        _month = 1;
-        _year = 2000;
+        _day = DEFAULT_DAY;
+        _month = DEFAULT_MONTH;
+        _year = DEFAULT_YEAR;
     }
 
     public Date(int day, int month, int year){
@@ -21,6 +24,10 @@ public class Date extends validations {
             _day = day;
             _month = month;
             _year = year;
+        } else {
+            _day = DEFAULT_DAY;
+            _month = DEFAULT_MONTH;
+            _year = DEFAULT_YEAR;
         }
     }
 
@@ -29,6 +36,10 @@ public class Date extends validations {
             _day = other._day;
             _month = other._month;
             _year = other._year;
+        } else {
+            _day = DEFAULT_DAY;
+            _month = DEFAULT_MONTH;
+            _year = DEFAULT_YEAR;
         }
     }
 

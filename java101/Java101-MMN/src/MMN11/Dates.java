@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Dates {
 
-    public static void main(String [] args){
+    public static void main(String[] args) {
 
         final int MIN_MONTH = 1;
         final int MAX_MONTH = 12;
@@ -25,27 +25,29 @@ public class Dates {
         // Getting initial date
         Scanner scan = new Scanner(System.in);
         System.out.println("This program get a date and number of days and returns the final date. \n" +
-                            "Please enter a valid date (year month day)");
-        int year = scan.nextInt(); int month = scan.nextInt(); int day = scan.nextInt();
+                "Please enter a valid date (year month day)");
+        int year = scan.nextInt();
+        int month = scan.nextInt();
+        int day = scan.nextInt();
 
         // Validate Month corners
-        if (month == FEB){
-            if ((year % 4 == 0) || (year == 400)){
+        if (month == FEB) {
+            if ((year % 4 == 0) || (year == 400)) {
                 maxDay = 29;
             } else {
                 maxDay = 28;
             }
-        } else if ((month == APR) || (month == JUN) || (month == SEP) || (month == NOV)){
+        } else if ((month == APR) || (month == JUN) || (month == SEP) || (month == NOV)) {
             maxDay = 30;
         }
 
 
         // Validate year is positive
-        if ((year <= 0) || (month <= 0) || (day <= 0)){
+        if ((year <= 0) || (month <= 0) || (day <= 0)) {
             System.out.println("All digits must be positive!");
-        } else if (month > MAX_MONTH){
+        } else if (month > MAX_MONTH) {
             System.out.println("The original date is invalid!");
-        } else if (day > maxDay){
+        } else if (day > maxDay) {
             System.out.println("The original date is invalid!");
         } else {
 
@@ -53,7 +55,7 @@ public class Dates {
             System.out.println("Please enter the number of days (1 - 15): ");
             int num = scan.nextInt();
 
-            if (num > MAX_NUM || num < 0){
+            if (num > MAX_NUM || num < 0) {
                 System.out.println("Please enter the number of days (0 - 10): ");
             } else {
                 // Calculate

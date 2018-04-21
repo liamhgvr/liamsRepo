@@ -10,7 +10,7 @@ public class Trip extends validations {
     private final int PRICE_PER_DAY = 250;
     private final int PRICE_PER_COUNTRY = 100;
     private final int BUS_SIZE = 10;
-    final int HIGH_SEASON = 20;
+    private final double HIGH_SEASON = 1.2;
 
     private String _guideName;
     private Date _departureDate;
@@ -95,12 +95,6 @@ public class Trip extends validations {
         }
     }
 
-    public void set_noOfCountries(Date other) {
-        if (isValidDate(other.getDay(), other.getMonth(), other.getYear()) && _departureDate.before(other)) {
-            _returningDate = new Date(other);
-        }
-    }
-
     public void set_noOfCountries(int newNoOfCountries) {
         if (newNoOfCountries < MAX_COUNTRIES && newNoOfCountries > 0) {
             _noOfCountries = newNoOfCountries;
@@ -109,7 +103,7 @@ public class Trip extends validations {
 
     public void set_noOfTravellers(int newNoOfTravellers) {
         if (newNoOfTravellers < MAX_TRAVELLERS && newNoOfTravellers > 0) {
-            _noOfCountries = newNoOfTravellers;
+            _noOfTravellers = newNoOfTravellers;
         }
     }
 
@@ -159,7 +153,7 @@ public class Trip extends validations {
         double price = this.tripDuration() * PRICE_PER_DAY + this._noOfCountries * PRICE_PER_COUNTRY;
 
         if (_departureDate.getMonth() == 7 || _departureDate.getMonth() == 8) {
-            price = price * 1.2;
+            price = price * HIGH_SEASON;
         }
 
         return price;
