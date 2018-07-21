@@ -1,11 +1,12 @@
+# dir_compare
+
 import os
-import glob
-import csv
 from stat import *
 
 
 PATH_A = "/Users/liam/test_env/a"
 PATH_B = "/Users/liam/test_env/diff_server/b"
+FULL_NAME = 'full_name'
 PERM = 'permissions'
 OWNER = 'owner'
 GROUP = 'group'
@@ -34,7 +35,7 @@ def get_group(item):
 def show_bad_files(file_list):
     # displays the diff files
     for i in file_list:
-        cmd = "ls -l " + i
+        cmd = "ls -l " + i[FULL_NAME]
         os.system(cmd)
 
 
@@ -51,22 +52,22 @@ def get_dir_tree(path):
 
         for filename in filenames:
             if filename not in files_2_ignore:
-                full_file_name = os.path.join(root, filename)
+                full_name = os.path.join(root, filename)
 
                 curr_item = {
-                    'full_name': full_file_name,
-                    PERM: get_perm(full_file_name),
-                    'owner': get_owner(full_file_name),
-                    'group': get_group(full_file_name)
+                    'full_name': full_name,
+                    PERM: get_perm(full_name),
+                    'owner': get_owner(full_name),
+                    'group': get_group(full_name)
                 }
 
-                short_name = full_file_name.replace(path, '')
+                short_name = full_name.replace(path, '')
                 dir_tree[short_name] = curr_item
 
     return dir_tree
 
 
-def great_compare(path_a, path_b):
+def main(path_a, path_b):
     # return list of dict
     # checks if files are missing from A
 
@@ -76,7 +77,7 @@ def great_compare(path_a, path_b):
     to_check = get_dir_tree(path_a)
     compare_with = get_dir_tree(path_b)
 
-    print "============= Starting Main ================"
+    print "============= Starting Compare ================"
     if len(compare_with.keys()) != len(to_check.keys()):
         print "Size don't match!"
 
@@ -104,8 +105,12 @@ def great_compare(path_a, path_b):
     return diffs
 
 
-my_diffs = great_compare(PATH_A, PATH_B)
+if __name__ == '__main__':
 
-print "================================"
-print "Missing files:", len(my_diffs['missing'])
-print "Different files:", len(my_diffs['different'])
+    my_diffs = main(PATH_A, PATH_B)
+
+    print "================ Results ================"
+    print "Missing files:", len(my_diffs['missing'])
+    show_bad_files(my_diffs['missing'])
+    print "Different files:", len(my_diffs['different'])
+    show_bad_files(my_diffs['different'])
