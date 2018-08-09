@@ -1,11 +1,13 @@
 # dir_compare
 
 import os
+import shutil
+import errno
 from stat import *
 
 
-PATH_A = "/Users/liam/test_env/a"
-PATH_B = "/Users/liam/test_env/diff_server/b"
+DEST_PATH = "/Users/liam/test_env/diff_server/c"
+SOURCE_PATH = "/Users/liam/test_env/diff_server/b"
 FULL_NAME = 'full_name'
 PERM = 'permissions'
 OWNER = 'owner'
@@ -15,27 +17,27 @@ files_2_ignore = [".ipynb_checkpoints", "Untitled.ipynb"]
 
 
 def get_perm(item):
-    # return str
+    # return int
     perm = oct(os.stat(item)[ST_MODE])[-3:]
     return perm
 
 
 def get_owner(item):
-    # return str
+    # return int
     owner = oct(os.stat(item)[ST_UID])[-3:]
     return owner
 
 
 def get_group(item):
-    # return str
+    # return int
     group = oct(os.stat(item)[ST_GID])[-3:]
     return group
 
 
 def show_bad_files(file_list):
     # displays the diff files
-    for i in file_list:
-        cmd = "ls -l " + i[FULL_NAME]
+    for item in file_list:
+        cmd = "ls -l " + item[FULL_NAME]
         os.system(cmd)
 
 
@@ -43,6 +45,45 @@ def get_name_from_path(path):
     # return str
     name = path.split('/')[-1]
     return name
+
+
+def set_permissions(src_file):
+    dest_file = DEST_PATH + src_file.replace(SOURCE_PATH, '')
+    perm = get_perm(src_file)
+    print type(perm), perm
+
+    try:
+        print "setting permission: %s for %s" % (perm, dest_file)
+        os.chmod(dest_file, perm)
+    except Exception as e:
+            raise e
+
+
+def set_owner_group(src_file):
+    dest_file = DEST_PATH + src_file.replace(SOURCE_PATH, '')
+    owner = get_owner(src_file)
+    group = get_group(src_file)
+
+    try:
+        print "setting owner: %s and group: %s for %s" % (owner, group, dest_file)
+        os.chown(dest_file, owner, group)
+    except Exception as e:
+        raise e
+
+
+def copy_missing_file(src_file):
+    # will create dir path if needed
+    dest_file = DEST_PATH + src_file.replace(SOURCE_PATH, '')
+
+    try:
+        shutil.copy2(src_file, dest_file)
+    except IOError as e:
+        # ENOENT(2): file does not exist, raised also on missing dest parent dir
+        if e.errno != errno.ENOENT:
+            raise
+        # try creating parent directories
+        os.makedirs(os.path.dirname(dest_file))
+        shutil.copy2(src_file, dest_file)
 
 
 def get_dir_tree(path):
@@ -55,10 +96,10 @@ def get_dir_tree(path):
                 full_name = os.path.join(root, filename)
 
                 curr_item = {
-                    'full_name': full_name,
+                    FULL_NAME: full_name,
                     PERM: get_perm(full_name),
-                    'owner': get_owner(full_name),
-                    'group': get_group(full_name)
+                    OWNER: get_owner(full_name),
+                    GROUP: get_group(full_name)
                 }
 
                 short_name = full_name.replace(path, '')
@@ -99,7 +140,7 @@ def main(path_a, path_b):
 
     diffs = {
         'missing': missing_files,
-        'different': different_files
+        'different': different_files,
     }
 
     return diffs
@@ -107,10 +148,18 @@ def main(path_a, path_b):
 
 if __name__ == '__main__':
 
-    my_diffs = main(PATH_A, PATH_B)
+    my_diffs = main(DEST_PATH, SOURCE_PATH)
 
     print "================ Results ================"
-    print "Missing files:", len(my_diffs['missing'])
+    print "Missing files from origin:", len(my_diffs['missing'])
     show_bad_files(my_diffs['missing'])
-    print "Different files:", len(my_diffs['different'])
+    print "Different files in source:", len(my_diffs['different'])
     show_bad_files(my_diffs['different'])
+    #
+    # for i in my_diffs['missing']:
+    #     copy_missing_file(i[FULL_NAME])
+    #
+    # for i in my_diffs['different']:
+    #     set_permissions(i[FULL_NAME])
+    #     set_owner_group(i[FULL_NAME])
+
