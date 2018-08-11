@@ -10,7 +10,7 @@ players = {'X': "", 'O': ""}
 
 def_board_size = 3
 
-main_board = [[DEF_BOX, DEF_BOX, DEF_BOX], [DEF_BOX, DEF_BOX, DEF_BOX], [DEF_BOX, DEF_BOX, DEF_BOX]]
+main_board = [[DEF_BOX for x in range(def_board_size)] for y in range(def_board_size)]
 
 
 # Methods
@@ -111,6 +111,8 @@ def play_game():
 
             if curr_index == EXIT:
                 print "Bye..."
+                playing = False
+                break
             else:
                 change_box_value(main_board, curr_index, curr_sign)
 
