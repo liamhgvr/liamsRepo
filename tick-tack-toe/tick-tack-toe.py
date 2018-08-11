@@ -38,6 +38,10 @@ def init_players():
 def get_box_index():
     # Get index from user
     raw_user_index = raw_input("Choose box: ")
+
+    while raw_user_index == '':
+        raw_user_index = raw_input("Choose box: ")
+
     if raw_user_index == EXIT:
         return raw_user_index
     else:
@@ -57,12 +61,11 @@ def change_box_value(board, index, user_sign):
 
 
 def is_tie(board):
-    for r in board:
-        for c in r:
-            if c == DEF_BOX:
-                return True
-            else:
-                return False
+    def_in_row = [] * len(board)
+    for row in board:
+        if DEF_BOX in row:
+            def_in_row.append(True)
+    return len(def_in_row) == 0
 
 
 def check_for_win(board, curr_user_sign):
@@ -97,11 +100,11 @@ def play_game():
     print "Welcome to Hell"
     playing = True
     init_players()
+    print(chr(27) + "[2J")
 
     while playing:
 
         for curr_sign, curr_player in players.iteritems():
-            print(chr(27) + "[2J")
             print "Current board:"
             print_board(main_board)
 
@@ -125,9 +128,9 @@ def play_game():
                     playing = False
                     break
                 elif is_tie(main_board):
-                    print(chr(27) + "[2J")
                     # Tie
                     print "It's a tie!"
+                    print_board(main_board)
                     playing = False
                     break
 
