@@ -1,19 +1,36 @@
 # Tick Tack Toe
 
-import os
 
 # Configuration
 EXIT = 'q'
 DEF_BOX = '_'
 
-players = {'X': "", 'O': ""}
+MAX_USERS = 5
+MAX_SIZE = 10
 
-def_board_size = 3
+players_signs = ['X', 'O', 'Z', 'L', 'G']
+players = {}
 
-main_board = [[DEF_BOX for x in range(def_board_size)] for y in range(def_board_size)]
+DEF_USERS = 2
+DEF_SIZE = 3
+
+board_size = DEF_SIZE
+
+main_board = []
 
 
 # Methods
+def build_board():
+    new_board_size = raw_input("Change board size (3 - 10): ")
+
+    if new_board_size != '' and MAX_SIZE >= int(new_board_size) > 0:
+        new_main_board = [[DEF_BOX for x in range(int(new_board_size))] for y in range(int(new_board_size))]
+        return new_main_board
+    else:
+        def_main_board = [[DEF_BOX for x in range(DEF_SIZE)] for y in range(DEF_SIZE)]
+        return def_main_board
+
+
 def print_board(board):
     # print the game board
     for print_row in board:
@@ -24,10 +41,21 @@ def print_board(board):
                 print print_row[box_index],
 
 
+def get_player_num():
+    new_players_count = raw_input("Change players count (2 - 5): ")
+
+    if new_players_count != '' and MAX_SIZE >= int(new_players_count) > 0:
+        return new_players_count
+    else:
+        return DEF_USERS
+
+
 def init_players():
     # Initiate players info
-    for item in players:
-        players[item] = raw_input("Enter player name: ")
+    num_of_users = get_player_num()
+
+    for i in range(int(num_of_users)):
+        players[players_signs[i]] = raw_input("Enter player name: ")
 
     # Print players
     print "Players:"
@@ -56,6 +84,8 @@ def change_box_value(board, index, user_sign):
 
     if board[r][c] == DEF_BOX:
         board[r][c] = user_sign
+    elif board_size < board[r][c] or 0 > board[r][c]:
+        print "Bad input - Lost your turn!"
     else:
         print "Box not empty!"
 
@@ -100,6 +130,8 @@ def play_game():
     print "Welcome to Hell"
     playing = True
     init_players()
+    main_board = build_board()
+
     print(chr(27) + "[2J")
 
     while playing:
