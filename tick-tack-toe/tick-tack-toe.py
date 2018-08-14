@@ -135,7 +135,8 @@ def play_game():
     print(chr(27) + "[2J")
 
     while playing:
-
+	print(chr(27) + "[2J")
+        print "==============="
         for curr_sign, curr_player in players.iteritems():
             print "Current board:"
             print_board(main_board)
@@ -161,6 +162,7 @@ def play_game():
                     break
                 elif is_tie(main_board):
                     # Tie
+		    print(chr(27) + "[2J")
                     print "It's a tie!"
                     print_board(main_board)
                     playing = False
