@@ -1,6 +1,5 @@
 # Tick Tack Toe
 
-
 # Configuration
 EXIT = 'q'
 DEF_BOX = '_'
@@ -33,7 +32,14 @@ def build_board():
 
 def print_board(board):
     # print the game board
+    row_count = 0
+
     for print_row in board:
+        # print row numer
+        print "%s :" % row_count,
+        row_count = row_count+1
+
+        # print row values
         for box_index in range(len(print_row)):
             if box_index == len(print_row)-1:
                 print print_row[box_index]
@@ -65,6 +71,7 @@ def init_players():
 
 def get_box_index():
     # Get index from user
+    print u"Enter row number first \u2193, and then column number \u2192"
     raw_user_index = raw_input("Choose box: ")
 
     while raw_user_index == '':
@@ -128,6 +135,7 @@ def check_for_win(board, curr_user_sign):
 def play_game():
 
     print "Welcome to Hell"
+
     playing = True
     init_players()
     main_board = build_board()
