@@ -33,12 +33,23 @@ def build_board():
 
 def print_board(board):
     # print the game board
+    row_count = 0
+
+    cols = [x for x in range(board_size)]
+    print "  ",
+    for i in cols:
+        print i,
+    print "\n"
+
     for print_row in board:
+        print row_count, ":",
         for box_index in range(len(print_row)):
             if box_index == len(print_row)-1:
                 print print_row[box_index]
             else:
                 print print_row[box_index],
+
+        row_count = +1
 
 
 def get_player_num():
