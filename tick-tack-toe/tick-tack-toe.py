@@ -1,6 +1,5 @@
 # Tick Tack Toe
 
-
 # Configuration
 EXIT = 'q'
 DEF_BOX = '_'
@@ -35,6 +34,7 @@ def print_board(board):
     # print the game board
     row_count = 0
 
+<<<<<<< HEAD
     cols = [x for x in range(board_size)]
     print "  ",
     for i in cols:
@@ -43,6 +43,14 @@ def print_board(board):
 
     for print_row in board:
         print row_count, ":",
+=======
+    for print_row in board:
+        # print row numer
+        print "%s :" % row_count,
+        row_count = row_count+1
+
+        # print row values
+>>>>>>> 3c63b7cf97cc006d6558520fb8f82464a7314c5d
         for box_index in range(len(print_row)):
             if box_index == len(print_row)-1:
                 print print_row[box_index]
@@ -76,6 +84,7 @@ def init_players():
 
 def get_box_index():
     # Get index from user
+    print u"Enter row number first \u2193, and then column number \u2192"
     raw_user_index = raw_input("Choose box: ")
 
     while raw_user_index == '':
@@ -139,6 +148,7 @@ def check_for_win(board, curr_user_sign):
 def play_game():
 
     print "Welcome to Hell"
+
     playing = True
     init_players()
     main_board = build_board()
@@ -146,7 +156,8 @@ def play_game():
     print(chr(27) + "[2J")
 
     while playing:
-
+	print(chr(27) + "[2J")
+        print "==============="
         for curr_sign, curr_player in players.iteritems():
             print "Current board:"
             print_board(main_board)
@@ -172,6 +183,7 @@ def play_game():
                     break
                 elif is_tie(main_board):
                     # Tie
+		    print(chr(27) + "[2J")
                     print "It's a tie!"
                     print_board(main_board)
                     playing = False

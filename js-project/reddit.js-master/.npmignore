@@ -1,6 +1,0 @@
-**/.*
-.jshintrc
-node_modules/
-bower.json
-examples/
-spec/
