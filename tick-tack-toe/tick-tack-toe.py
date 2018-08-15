@@ -122,7 +122,7 @@ def check_for_win(board, curr_user_sign):
                         return True
                 # Check DL
                 if c > 0 and r < limit and board[r+1][c-1] == curr_user_sign:
-                    if c > 2 and r < limit-1 and board[r+2][c-2] == curr_user_sign:
+                    if c > 1 and r < limit-1 and board[r+2][c-2] == curr_user_sign:
                         return True
                 # Check D
                 if r < limit and board[r+1][c] == curr_user_sign:
