@@ -34,30 +34,17 @@ def print_board(board):
     # print the game board
     row_count = 0
 
-<<<<<<< HEAD
-    cols = [x for x in range(board_size)]
-    print "  ",
-    for i in cols:
-        print i,
-    print "\n"
-
-    for print_row in board:
-        print row_count, ":",
-=======
     for print_row in board:
         # print row numer
         print "%s :" % row_count,
         row_count = row_count+1
 
         # print row values
->>>>>>> 3c63b7cf97cc006d6558520fb8f82464a7314c5d
         for box_index in range(len(print_row)):
             if box_index == len(print_row)-1:
                 print print_row[box_index]
             else:
                 print print_row[box_index],
-
-        row_count = +1
 
 
 def get_player_num():
@@ -131,15 +118,15 @@ def check_for_win(board, curr_user_sign):
                         return True
                 # Check DR
                 if c < limit and r < limit and board[r+1][c+1] == curr_user_sign:
-                    if c < limit-1 and r < limit-1 and board[r+2][c+2] == curr_user_sign:
+                    if c+1 < limit-1 and r+1 < limit-1 and board[r+2][c+2] == curr_user_sign:
                         return True
                 # Check DL
                 if c > 0 and r < limit and board[r+1][c-1] == curr_user_sign:
-                    if c > 2 and r < limit-1 and board[r+2][c-2] == curr_user_sign:
+                    if c-1 > 0 and r+1 < limit-1 and board[r+2][c-2] == curr_user_sign:
                         return True
                 # Check D
                 if r < limit and board[r+1][c] == curr_user_sign:
-                    if r < limit-1 and board[r+2][c] == curr_user_sign:
+                    if r+1 < limit-1 and board[r+2][c] == curr_user_sign:
                         return True
                 else:
                     return False
