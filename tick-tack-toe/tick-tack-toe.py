@@ -167,9 +167,11 @@ def play_game():
 
     print(chr(27) + "[2J")
 
-    while to_exit:
+    while to_exit is not True:
+
         print(chr(27) + "[2J")
         print "==============="
+
         for curr_sign, curr_player in players.iteritems():
             print "Current board:"
             print_board(main_board)
