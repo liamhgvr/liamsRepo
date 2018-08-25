@@ -47,15 +47,15 @@ def print_board(board):
 
     for print_row in board:
         # print row number
-        print "%s :" % row_count,
+        print bcolors.OKBLUE + "%s :" % row_count,
         row_count = row_count+1
 
         # print row values
         for box_index in range(len(print_row)):
             if box_index == len(print_row)-1:
-                print print_row[box_index]
+                print bcolors.OKBLUE + print_row[box_index]
             else:
-                print print_row[box_index],
+                print bcolors.OKBLUE + print_row[box_index],
 
 
 def get_player_num():
@@ -161,6 +161,17 @@ def is_win(board, curr_sign):
     return False
 
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 def play_game():
 
     print "Welcome to Hell"
@@ -174,13 +185,13 @@ def play_game():
     while to_exit is not True:
 
         cls()
-        print "==============="
+        print bcolors.OKBLUE + "==============="
 
         for curr_sign, curr_player in players.iteritems():
 
             # print board
-            print "Player: ", curr_player
-            print "Current board:"
+            print bcolors.OKBLUE + "Player: ", curr_player
+            print bcolors.OKBLUE + "Current board:"
             print_board(main_board)
 
             # Game move:
@@ -197,14 +208,14 @@ def play_game():
                 # Check for win
                 if is_win(main_board, curr_sign):
                     cls()
-                    print "Player: " + curr_player + " won!"
+                    print bcolors.BOLD + "Player: " + curr_player + " won!"
                     print_board(main_board)
                     to_exit = True
                     break
                 # Check for tie
                 elif is_tie(main_board):
                     cls()
-                    print "It's a tie!"
+                    print bcolors.BOLD + "It's a tie!"
                     print_board(main_board)
                     to_exit = True
                     break
