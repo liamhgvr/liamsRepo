@@ -8,7 +8,7 @@ WIN = 3
 MAX_USERS = 5
 MAX_SIZE = 10
 
-players_signs = ['X', 'O', 'Z', 'L', 'G']
+players_signs = ['O', 'X', 'Z', 'L', 'G']
 players = {}
 
 DEF_USERS = 2
@@ -25,15 +25,19 @@ ways = {
 
 # Methods
 
+def cls():
+    # Clear screen
+    print(chr(27) + "[2J")
+
+
 def build_board():
 
-    resize_to = DEF_SIZE
-    user_size = int(raw_input("Change board size (3 - 10): "))
+    board_size = raw_input("Change board size (3 - 10): ")
 
-    if user_size != '' and MAX_SIZE >= user_size > 0:
-        resize_to = user_size
+    if board_size == '' or MAX_SIZE < int(board_size) < 0:
+        board_size = DEF_SIZE
 
-    new_main_board = [[BOX for x in range(resize_to)] for y in range(resize_to)]
+    new_main_board = [[BOX for x in range(int(board_size))] for y in range(int(board_size))]
     return new_main_board
 
 
@@ -42,7 +46,7 @@ def print_board(board):
     row_count = 0
 
     for print_row in board:
-        # print row numer
+        # print row number
         print "%s :" % row_count,
         row_count = row_count+1
 
@@ -55,12 +59,12 @@ def print_board(board):
 
 
 def get_player_num():
-    new_players_count = raw_input("Change players count (2 - 5): ")
+    players_count = raw_input("Change players count (2 - 5): ")
 
-    if new_players_count != '' and MAX_SIZE >= int(new_players_count) > 0:
-        return new_players_count
-    else:
-        return DEF_USERS
+    if players_count == '' or MAX_SIZE < int(players_count) < 0:
+        players_count = DEF_USERS
+
+    return players_count
 
 
 def init_players():
@@ -103,7 +107,7 @@ def change_box_value(board, index, user_sign):
         print "Bad input - Lost your turn!"
     else:
         print "Box not empty!"
-
+ 
 
 def is_tie(board):
     def_in_row = [] * len(board)
@@ -116,18 +120,18 @@ def is_tie(board):
 def is_strick(board, r, c, sign, way_to_go):
 
     board_limit = len(board)-1
-    strike = WIN-1
+    strike = 1
 
-    while (r + ways[way_to_go]['r']) + (c + ways[way_to_go]['c']) <= board_limit and c + ways[way_to_go]['c'] >= 0:
+    while board[r][c] == sign and r + ways[way_to_go]['r'] <= board_limit and board_limit >= c + ways[way_to_go]['c'] >= 0:
 
         r = r + ways[way_to_go]['r']
         c = c + ways[way_to_go]['c']
 
         if board[r][c] == sign:
-            strike = strike - 1
+            strike = strike + 1
 
-            if strike == 0:
-                return True
+        if strike == WIN:
+            return True
     return False
 
 
@@ -165,40 +169,45 @@ def play_game():
     init_players()
     main_board = build_board()
 
-    print(chr(27) + "[2J")
+    cls()
 
     while to_exit is not True:
 
-        print(chr(27) + "[2J")
+        cls()
         print "==============="
 
         for curr_sign, curr_player in players.iteritems():
+
+            # print board
+            print "Player: ", curr_player
             print "Current board:"
             print_board(main_board)
 
             # Game move:
-            print "Player: ", curr_player
             curr_index = get_box_index()
 
             if curr_index == EXIT or to_exit:
                 print "Bye..."
+                to_exit = True
                 break
             else:
                 change_box_value(main_board, curr_index, curr_sign)
 
-                # Check for winning condition
+                # TODO: condition fails
+                # Check for win
                 if is_win(main_board, curr_sign):
-                    print(chr(27) + "[2J")
-                    # Winner
+                    cls()
                     print "Player: " + curr_player + " won!"
                     print_board(main_board)
                     to_exit = True
+                    break
+                # Check for tie
                 elif is_tie(main_board):
-                    # Tie
-                    print(chr(27) + "[2J")
+                    cls()
                     print "It's a tie!"
                     print_board(main_board)
                     to_exit = True
+                    break
 
 
 if __name__ == '__main__':
