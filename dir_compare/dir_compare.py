@@ -3,6 +3,7 @@
 import os
 import shutil
 import errno
+import sys
 from stat import *
 
 
@@ -148,13 +149,26 @@ def main(path_a, path_b):
 
 if __name__ == '__main__':
 
-    my_diffs = main(DEST_PATH, SOURCE_PATH)
+    my_target = DEST_PATH
+    my_source = SOURCE_PATH
 
-    print "================ Results ================"
-    print "Missing files from origin:", len(my_diffs['missing'])
-    show_bad_files(my_diffs['missing'])
-    print "Different files in source:", len(my_diffs['different'])
-    show_bad_files(my_diffs['different'])
+    if len(sys.argv) == 1:
+        print "Using default parameters"
+        my_diffs = main(my_target, my_source)
+    elif len(sys.argv) == 3:
+        my_target = sys.argv[1]
+        my_source = sys.argv[2]
+        print "TARGET: %s SOURCE: %s " % (my_target, my_source)
+        my_diffs = main(my_target, my_source)
+    else:
+        print "Missing source path!"
+        exit(1)
+
+    # print "================ Results ================"
+    # print "Missing files from origin:", len(my_diffs['missing'])
+    # show_bad_files(my_diffs['missing'])
+    # print "Different files in source:", len(my_diffs['different'])
+    # show_bad_files(my_diffs['different'])
     #
     # for i in my_diffs['missing']:
     #     copy_missing_file(i[FULL_NAME])
