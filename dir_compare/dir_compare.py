@@ -1,11 +1,10 @@
 # dir_compare
-
+import hashlib
 import os
 import shutil
 import errno
 import sys
 from stat import *
-
 
 DEST_PATH = "/Users/liam/test_env/diff_server/c"
 SOURCE_PATH = "/Users/liam/test_env/diff_server/b"
@@ -13,6 +12,7 @@ FULL_NAME = 'full_name'
 PERM = 'permissions'
 OWNER = 'owner'
 GROUP = 'group'
+ISFILE = 'is_file'
 
 files_2_ignore = [".ipynb_checkpoints", "Untitled.ipynb"]
 
@@ -27,6 +27,12 @@ def get_owner(item):
     # return int
     owner = oct(os.stat(item)[ST_UID])[-3:]
     return owner
+
+
+def is_file(path):
+    # return boolean
+    is_file_b = os.path.isfile(path)
+    return is_file_b
 
 
 def get_group(item):
@@ -57,7 +63,7 @@ def set_permissions(src_file):
         print "setting permission: %s for %s" % (perm, dest_file)
         os.chmod(dest_file, perm)
     except Exception as e:
-            raise e
+        raise e
 
 
 def set_owner_group(src_file):
@@ -70,6 +76,14 @@ def set_owner_group(src_file):
         os.chown(dest_file, owner, group)
     except Exception as e:
         raise e
+
+
+def get_md5(fname):
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
 
 def copy_missing_file(src_file):
@@ -100,7 +114,8 @@ def get_dir_tree(path):
                     FULL_NAME: full_name,
                     PERM: get_perm(full_name),
                     OWNER: get_owner(full_name),
-                    GROUP: get_group(full_name)
+                    GROUP: get_group(full_name),
+                    ISFILE: is_file(full_name)
                 }
 
                 short_name = full_name.replace(path, '')
@@ -109,17 +124,36 @@ def get_dir_tree(path):
     return dir_tree
 
 
-def main(path_a, path_b):
+def compare_1_dir(target_path):
+
+    duplicate_files = {
+        'filename'
+    }
+
+    to_check = get_dir_tree(target_path)
+
+    for file_key, file_value in to_check.iteritems():
+        print file_key, to_check[file_key][ISFILE]
+        print(get_md5(to_check[file_key][FULL_NAME]))
+
+    diffs = {
+        'duplicate': duplicate_files,
+    }
+
+    return diffs
+
+
+def compare_2_dirs(target_path, source_path):
     # return list of dict
     # checks if files are missing from A
 
     missing_files = []
     different_files = []
 
-    to_check = get_dir_tree(path_a)
-    compare_with = get_dir_tree(path_b)
+    to_check = get_dir_tree(target_path)
+    compare_with = get_dir_tree(source_path)
 
-    print "============= Starting Compare ================"
+    print "============= Comparing Two Directories ================"
     if len(compare_with.keys()) != len(to_check.keys()):
         print "Size don't match!"
 
@@ -152,23 +186,27 @@ if __name__ == '__main__':
     my_target = DEST_PATH
     my_source = SOURCE_PATH
 
-    if len(sys.argv) == 1:
-        print "Using default parameters"
-        my_diffs = main(my_target, my_source)
+    if len(sys.argv) == 2:
+        print "TARGET: %s" % my_target
+        my_diffs = compare_1_dir(my_target)
+        print "Duplicate files in target:", len(my_diffs['duplicate'])
+        #show_bad_files(my_diffs['duplicate'])
+        print "================ Results ================"
     elif len(sys.argv) == 3:
         my_target = sys.argv[1]
         my_source = sys.argv[2]
         print "TARGET: %s SOURCE: %s " % (my_target, my_source)
-        my_diffs = main(my_target, my_source)
+        my_diffs = compare_2_dirs(my_target, my_source)
+        print "================ Results ================"
+        print "Missing files from origin:", len(my_diffs['missing'])
+        show_bad_files(my_diffs['missing'])
+        print "Different files in source:", len(my_diffs['different'])
+        show_bad_files(my_diffs['different'])
     else:
         print "Missing source path!"
         exit(1)
 
-    # print "================ Results ================"
-    # print "Missing files from origin:", len(my_diffs['missing'])
-    # show_bad_files(my_diffs['missing'])
-    # print "Different files in source:", len(my_diffs['different'])
-    # show_bad_files(my_diffs['different'])
+
     #
     # for i in my_diffs['missing']:
     #     copy_missing_file(i[FULL_NAME])
@@ -176,4 +214,3 @@ if __name__ == '__main__':
     # for i in my_diffs['different']:
     #     set_permissions(i[FULL_NAME])
     #     set_owner_group(i[FULL_NAME])
-
