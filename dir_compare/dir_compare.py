@@ -12,6 +12,7 @@ COMPARE_1_DIRS = 2
 DEST_PATH = "/Users/liam/test_env/diff_server/c"
 SOURCE_PATH = "/Users/liam/test_env/diff_server/b"
 FULL_NAME = 'full_name'
+SHORT_NAME = 'short_name'
 PERM = 'permissions'
 OWNER = 'owner'
 GROUP = 'group'
@@ -42,13 +43,6 @@ def get_group(item):
     # return int
     group = oct(os.stat(item)[ST_GID])[-3:]
     return group
-
-
-def show_bad_files(file_list):
-    # displays the diff files
-    for item in file_list:
-        cmd = "sudo ls -l " + item[FULL_NAME]
-        os.system(cmd)
 
 
 def get_name_from_path(path):
@@ -89,6 +83,12 @@ def get_file_md5(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
+def show_bad_files(file_list):
+    # displays the diff files
+    for key, value in file_list.iteritems():
+        print "==> %s: %s" % (key, value)
+        # cmd = "sudo ls -l " + key
+        # os.system(cmd)
 
 # def copy_missing_file(src_file):
 #     # will create dir path if needed
@@ -113,77 +113,70 @@ def get_dir_tree(path):
         for filename in filenames:
             if filename not in files_2_ignore:
                 full_name = os.path.join(root, filename)
+                short_name = full_name.replace(path, '').replace('/', '')
 
+                # Get file attributes
                 curr_item = {
-                    FULL_NAME: full_name,
+                    SHORT_NAME: short_name,
                     PERM: get_perm(full_name),
                     OWNER: get_owner(full_name),
                     GROUP: get_group(full_name),
                     ISFILE: is_file(full_name)
                 }
 
-                short_name = full_name.replace(path, '')
-                dir_tree[short_name] = curr_item
+                dir_tree[full_name] = curr_item
 
     return dir_tree
 
 
 def compare_1_dir(target_path):
-
+    # return dict of dict
     duplicate_files = {}
-
     target_dir_tree = get_dir_tree(target_path)
 
-    for file_key in target_dir_tree.iteritems():
-        if target_dir_tree[file_key][ISFILE]:
-            print target_dir_tree[FULL_NAME] + "-" + get_file_md5(target_dir_tree[file_key][FULL_NAME])
-            duplicate_files[file_key] = target_dir_tree[file_key]
+    print "Scanning %s..." % target_path
+    for file_key, file_values in target_dir_tree.iteritems():
+        if file_values[ISFILE]:
+            curr_md5 = get_file_md5(file_key)
+            # Check for duplicates
+            if curr_md5 in duplicate_files.keys():
+                duplicate_files[curr_md5].append(file_key)
+            else:
+                duplicate_files[curr_md5] = [file_key]
+        else:
+            print "%s is a directory" % file_key
 
-    diffs = {
-        'duplicate': duplicate_files,
-    }
-
-    return diffs
+    return duplicate_files
 
 
 def compare_2_dirs(target_path, source_path):
     # return dict of dict
-    # checks if files are missing from A
-
-    missing_files = {}
-    different_files = {}
+    # checks if files are missing from target
 
     target_dir_tree = get_dir_tree(target_path)
     source_dir_tree = get_dir_tree(source_path)
+    missing_files = {}
+    different_files = {}
 
     print "============= Comparing Two Directories ================"
     if len(source_dir_tree.keys()) != len(target_dir_tree.keys()):
         print "Size don't match!"
 
     for file_key in source_dir_tree:
-        # check for missing
+
+        # check for missing files
         if file_key not in target_dir_tree.keys():
             print "moving %s to missing files dict" % file_key
             missing_files[file_key] = source_dir_tree[file_key]
-        # check for different Permissions
-        elif source_dir_tree[file_key][PERM] != target_dir_tree[file_key][PERM]:
+
+        # check for different in files
+        elif source_dir_tree[file_key][PERM] != target_dir_tree[file_key][PERM] or \
+                source_dir_tree[file_key][OWNER] != target_dir_tree[file_key][OWNER] or \
+                source_dir_tree[file_key][GROUP] != target_dir_tree[file_key][GROUP]:
             print "moving %s to different files dict - permissions" % file_key
             different_files[file_key] = source_dir_tree[file_key]
-        # check for different Owner
-        elif source_dir_tree[file_key][OWNER] != target_dir_tree[file_key][OWNER]:
-            print "moving %s to different files dict - owner" % file_key
-            different_files[file_key] = source_dir_tree[file_key]
-        # check for different Group
-        elif source_dir_tree[file_key][GROUP] != target_dir_tree[file_key][GROUP]:
-            print "moving %s to different files dict - group" % file_key
-            different_files[file_key] = source_dir_tree[file_key]
 
-    diffs = {
-        'missing': missing_files,
-        'different': different_files,
-    }
-
-    return diffs
+    return missing_files, different_files
 
 
 if __name__ == '__main__':
@@ -198,23 +191,23 @@ if __name__ == '__main__':
         my_target = sys.argv[1]
         my_source = sys.argv[2]
         print "TARGET: %s SOURCE: %s " % (my_target, my_source)
-        my_diffs = compare_2_dirs(my_target, my_source)
+        my_missing_files, my_different_files = compare_2_dirs(my_target, my_source)
         # Printing results
         print "================ Results ================"
-        print "Missing files from origin:", len(my_diffs['missing'])
-        show_bad_files(my_diffs['missing'])
-        print "Different files in source:", len(my_diffs['different'])
-        show_bad_files(my_diffs['different'])
+        print "Missing files from origin: %s" % len(my_missing_files)
+        show_bad_files(my_missing_files)
+        print "Different files in source: %s" % len(my_different_files)
+        show_bad_files(my_different_files)
     # Compering a single directory
     elif len(sys.argv) == COMPARE_1_DIRS:
         # Getting directory path
         my_target = sys.argv[1]
         print "TARGET: %s" % my_target
-        my_diffs = compare_1_dir(my_target)
+        my_duplicate_files = compare_1_dir(my_target)
         # Printing results
         print "================ Results ================"
-        print "Duplicate files in target:", len(my_diffs['duplicate'])
-        show_bad_files(my_diffs['duplicate'])
+        print "Duplicate files in target: %s" % len(my_duplicate_files)
+        show_bad_files(my_duplicate_files)
     else:
         print "Missing target path!"
         exit(1)
