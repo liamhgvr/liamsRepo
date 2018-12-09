@@ -19,6 +19,7 @@ alias ttt='python ~/git/liamsRepo/tick-tack-toe/tick-tack-toe.py'
 alias jeff='ssh -i .ssh/keys/test_key.pem ubuntu@52.17.198.7'
 alias tellalogs='ssh -i ~/.ssh/keys/tellavista.pem ubuntu@34.198.83.218 "bash /home/ubuntu/devops-scripts/logs_bkp_n_del.sh"'
 alias space='sudo du -cha --max-depth=1 /var | grep -E "M|G"'
+alias dircomp='python ~/git/liamsRepo/dir_compare/dir_compare.py'
 
 #########
 # Export
