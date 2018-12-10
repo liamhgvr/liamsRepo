@@ -107,6 +107,31 @@ def show_bad_files(file_list):
 #         shutil.copy2(src_file, dest_file)
 
 
+def new_get_dir_tree(path):
+    # Get tree from LS output
+    dir_tree = {}
+
+    for root, directories, filenames in os.walk(path):
+
+        for filename in filenames:
+            if filename not in files_2_ignore:
+                full_name = os.path.join(root, filename)
+                short_name = full_name.replace(path, '').replace('/', '')
+
+                print "==> %s \n" % full_name,
+                cmd = "sudo ls -l " + full_name
+                res = os.system(cmd)  # TODO: how to get output?
+
+                # Get file attributes
+                curr_item = {
+                    "res": res
+                }
+
+                dir_tree[full_name] = curr_item
+
+    return dir_tree
+
+
 def get_dir_tree(path):
     # return dict of dict
     dir_tree = {}
@@ -201,8 +226,7 @@ if __name__ == '__main__':
     # Compering 2 directories
     if len(sys.argv) == COMPARE_2_DIRS:
         # Getting directories paths
-        my_target = sys.argv[1]
-        my_source = sys.argv[2]
+        my_target = sys.argv[1], my_source = sys.argv[2]
         print "TARGET: %s SOURCE: %s " % (my_target, my_source)
         my_missing_files, my_different_files = compare_2_dirs(my_target, my_source)
         # Printing results
@@ -216,11 +240,12 @@ if __name__ == '__main__':
         # Getting directory path
         my_target = sys.argv[1]
         print "TARGET: %s" % my_target
-        my_duplicate_files = compare_1_dir(my_target)
-        # Printing results
-        print "================ Results ================"
-        print "Duplicate files in target: %s" % len(my_duplicate_files)
-        show_bad_files(my_duplicate_files)
+        print new_get_dir_tree(my_target)
+        # my_duplicate_files = compare_1_dir(my_target)
+        # # Printing results
+        # print "================ Results ================"
+        # print "Duplicate files in target: %s" % len(my_duplicate_files)
+        # show_bad_files(my_duplicate_files)
     else:
         print "Missing target path!"
         exit(1)
