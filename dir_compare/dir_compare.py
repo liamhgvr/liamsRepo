@@ -83,10 +83,12 @@ def get_file_md5(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
+
 def show_bad_files(file_list):
     # displays the diff files
     for key, value in file_list.iteritems():
-        print "==> %s: %s" % (key, value)
+        print "==> %s:" % key
+        print "-- %s" % value
         # cmd = "sudo ls -l " + key
         # os.system(cmd)
 
@@ -132,8 +134,10 @@ def get_dir_tree(path):
 def compare_1_dir(target_path):
     # return dict of dict
     duplicate_files = {}
+    clean_md5 = []
     target_dir_tree = get_dir_tree(target_path)
 
+    # Create md5 file maps
     print "Scanning %s..." % target_path
     for file_key, file_values in target_dir_tree.iteritems():
         if file_values[ISFILE]:
@@ -145,6 +149,15 @@ def compare_1_dir(target_path):
                 duplicate_files[curr_md5] = [file_key]
         else:
             print "%s is a directory" % file_key
+
+    # Clean non dups
+    for md5 in duplicate_files.iterkeys():
+        if len(duplicate_files[md5]) == 1:
+            clean_md5.append(md5)
+
+    # Remove non dups
+    for md5 in clean_md5:
+        duplicate_files.pop(md5)
 
     return duplicate_files
 
