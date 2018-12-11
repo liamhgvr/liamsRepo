@@ -3,7 +3,9 @@ import hashlib
 import os
 import shutil
 import errno
+import subprocess
 import sys
+import commands
 from stat import *
 
 COMPARE_2_DIRS = 3
@@ -120,11 +122,15 @@ def new_get_dir_tree(path):
 
                 print "==> %s \n" % full_name,
                 cmd = "sudo ls -l " + full_name
-                res = os.system(cmd)  # TODO: how to get output?
-
+                #res = os.system(cmd)  # TODO: how to get output?
+                #res = os.popen(cmd).read().split(' ')
+                # res = subprocess.check_output(cmd, shell=True).split(' ')
+                status, output = commands.getstatusoutput(cmd)
+                #print res
+                print status, output.split(' ')
                 # Get file attributes
                 curr_item = {
-                    "res": res
+                    #"res": res
                 }
 
                 dir_tree[full_name] = curr_item
@@ -240,7 +246,7 @@ if __name__ == '__main__':
         # Getting directory path
         my_target = sys.argv[1]
         print "TARGET: %s" % my_target
-        print new_get_dir_tree(my_target)
+        a = new_get_dir_tree(my_target)
         # my_duplicate_files = compare_1_dir(my_target)
         # # Printing results
         # print "================ Results ================"
