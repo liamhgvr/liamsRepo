@@ -15,9 +15,12 @@ DEST_PATH = "/Users/liam/test_env/diff_server/c"
 SOURCE_PATH = "/Users/liam/test_env/diff_server/b"
 FULL_NAME = 'full_name'
 SHORT_NAME = 'short_name'
+KEY = 'key'
 PERM = 'permissions'
 OWNER = 'owner'
 GROUP = 'group'
+SIZE = 'size'
+DATE = 'date'
 ISFILE = 'is_file'
 
 files_2_ignore = [".ipynb_checkpoints", "Untitled.ipynb"]
@@ -117,48 +120,51 @@ def new_get_dir_tree(path):
         for filename in filenames:
             if filename not in files_2_ignore:
                 full_name = os.path.join(root, filename)
-                short_name = full_name.replace(path, '').replace('/', '')
+                short_name = full_name.replace(path, '')
 
-                # print "==> %s \n" % short_name,
-                cmd = "sudo ls -l " + full_name
-                #res = os.system(cmd)  # TODO: how to get output?
-                #res = os.popen(cmd).read().split(' ')
-                # res = subprocess.check_output(cmd, shell=True).split(' ')
+                cmd = "ls -l " + full_name
                 status, output = commands.getstatusoutput(cmd)
-                #print res
-                print status, output.split(' ')
-                # Get file attributes
-                curr_item = {
-                    # short_name: res
-                }
+                res = output.split(' ')
 
-                dir_tree[full_name] = curr_item
+                curr_item = {
+                    KEY: short_name,
+                    FULL_NAME: full_name,
+                    PERM: res[0],
+                    OWNER: res[3],
+                    GROUP: res[5],
+                    SIZE: res[7],
+                    # DATE: res[8:11],
+                    ISFILE: is_file(full_name),
+                }
+                
+                print "- %s ==> %s" % (short_name, curr_item)
+                dir_tree[short_name] = curr_item
 
     return dir_tree
 
 
-def get_dir_tree(path):
-    # return dict of dict
-    dir_tree = {}
-    for root, directories, filenames in os.walk(path):
+# def get_dir_tree(path):
+#     # return dict of dict
+#     dir_tree = {}
+#     for root, directories, filenames in os.walk(path):
 
-        for filename in filenames:
-            if filename not in files_2_ignore:
-                full_name = os.path.join(root, filename)
-                short_name = full_name.replace(path, '').replace('/', '')
+#         for filename in filenames:
+#             if filename not in files_2_ignore:
+#                 full_name = os.path.join(root, filename)
+#                 short_name = full_name.replace(path, '').replace('/', '')
 
-                # Get file attributes
-                curr_item = {
-                    SHORT_NAME: short_name,
-                    PERM: get_perm(full_name),
-                    OWNER: get_owner(full_name),
-                    GROUP: get_group(full_name),
-                    ISFILE: is_file(full_name)
-                }
+#                 # Get file attributes
+#                 curr_item = {
+#                     SHORT_NAME: short_name,
+#                     PERM: get_perm(full_name),
+#                     OWNER: get_owner(full_name),
+#                     GROUP: get_group(full_name),
+#                     ISFILE: is_file(full_name)
+#                 }
 
-                dir_tree[full_name] = curr_item
+#                 dir_tree[full_name] = curr_item
 
-    return dir_tree
+#     return dir_tree
 
 
 def compare_1_dir(target_path):
