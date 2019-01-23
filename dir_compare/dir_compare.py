@@ -114,13 +114,12 @@ def new_get_dir_tree(path):
     dir_tree = {}
 
     for root, directories, filenames in os.walk(path):
-
         for filename in filenames:
             if filename not in files_2_ignore:
                 full_name = os.path.join(root, filename)
                 short_name = full_name.replace(path, '').replace('/', '')
 
-                print "==> %s \n" % full_name,
+                # print "==> %s \n" % short_name,
                 cmd = "sudo ls -l " + full_name
                 #res = os.system(cmd)  # TODO: how to get output?
                 #res = os.popen(cmd).read().split(' ')
@@ -130,7 +129,7 @@ def new_get_dir_tree(path):
                 print status, output.split(' ')
                 # Get file attributes
                 curr_item = {
-                    #"res": res
+                    # short_name: res
                 }
 
                 dir_tree[full_name] = curr_item
