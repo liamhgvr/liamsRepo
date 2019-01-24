@@ -21,6 +21,7 @@ OWNER = 'owner'
 GROUP = 'group'
 SIZE = 'size'
 DATE = 'date'
+MD5 = 'md5'
 ISFILE = 'is_file'
 
 files_2_ignore = [".ipynb_checkpoints", "Untitled.ipynb"]
@@ -30,24 +31,6 @@ def is_file(path):
     # return boolean
     is_file_b = os.path.isfile(path)
     return is_file_b
-
-
-def get_perm(item):
-    # return int
-    perm = oct(os.stat(item)[ST_MODE])[-3:]
-    return perm
-
-
-def get_owner(item):
-    # return int
-    owner = oct(os.stat(item)[ST_UID])[-3:]
-    return owner
-
-
-def get_group(item):
-    # return int
-    group = oct(os.stat(item)[ST_GID])[-3:]
-    return group
 
 
 def get_name_from_path(path):
@@ -89,31 +72,15 @@ def get_file_md5(fname):
     return hash_md5.hexdigest()
 
 
-def show_bad_files(file_list):
-    # displays the diff files
-    for key, value in file_list.iteritems():
-        print "==> %s:" % key
-        print "-- %s" % value
-        # cmd = "sudo ls -l " + key
-        # os.system(cmd)
-
-# def copy_missing_file(src_file):
-#     # will create dir path if needed
-#     dest_file = DEST_PATH + src_file.replace(SOURCE_PATH, '')
-#
-#     try:
-#         shutil.copy2(src_file, dest_file)
-#     except IOError as e:
-#         # ENOENT(2): file does not exist, raised also on missing dest parent dir
-#         if e.errno != errno.ENOENT:
-#             raise
-#         # try creating parent directories
-#         os.makedirs(os.path.dirname(dest_file))
-#         shutil.copy2(src_file, dest_file)
+def print_duplicates(file_dict):
+    # displays the dup files
+    print "================ Results ================"
+    for key, values in file_dict.iteritems():
+        print "==> %s: %s" % (key, values)
 
 
-def new_get_dir_tree(path):
-    # Get tree from LS output
+def get_dir_tree(path):
+    # returns dict of dicts
     dir_tree = {}
 
     for root, directories, filenames in os.walk(path):
@@ -125,14 +92,16 @@ def new_get_dir_tree(path):
                 cmd = "ls -l " + full_name
                 status, output = commands.getstatusoutput(cmd)
                 res = output.split(' ')
+                res = filter(None, res)
 
                 curr_item = {
                     KEY: short_name,
                     FULL_NAME: full_name,
                     PERM: res[0],
-                    OWNER: res[3],
-                    GROUP: res[5],
-                    SIZE: res[7],
+                    OWNER: res[2],
+                    GROUP: res[3],
+                    SIZE: res[4],
+                    MD5: get_file_md5(full_name),
                     # DATE: res[8:11],
                     ISFILE: is_file(full_name),
                 }
@@ -143,41 +112,16 @@ def new_get_dir_tree(path):
     return dir_tree
 
 
-# def get_dir_tree(path):
-#     # return dict of dict
-#     dir_tree = {}
-#     for root, directories, filenames in os.walk(path):
-
-#         for filename in filenames:
-#             if filename not in files_2_ignore:
-#                 full_name = os.path.join(root, filename)
-#                 short_name = full_name.replace(path, '').replace('/', '')
-
-#                 # Get file attributes
-#                 curr_item = {
-#                     SHORT_NAME: short_name,
-#                     PERM: get_perm(full_name),
-#                     OWNER: get_owner(full_name),
-#                     GROUP: get_group(full_name),
-#                     ISFILE: is_file(full_name)
-#                 }
-
-#                 dir_tree[full_name] = curr_item
-
-#     return dir_tree
-
-
 def compare_1_dir(target_path):
-    # return dict of dict
+    # returns dict of dicts
     duplicate_files = {}
-    clean_md5 = []
     target_dir_tree = get_dir_tree(target_path)
 
-    # Create md5 file maps
+    # Create md5 map of files
     print "Scanning %s..." % target_path
     for file_key, file_values in target_dir_tree.iteritems():
         if file_values[ISFILE]:
-            curr_md5 = get_file_md5(file_key)
+            curr_md5 = file_values[MD5]
             # Check for duplicates
             if curr_md5 in duplicate_files.keys():
                 duplicate_files[curr_md5].append(file_key)
@@ -187,13 +131,9 @@ def compare_1_dir(target_path):
             print "%s is a directory" % file_key
 
     # Clean non dups
-    for md5 in duplicate_files.iterkeys():
-        if len(duplicate_files[md5]) == 1:
-            clean_md5.append(md5)
-
-    # Remove non dups
-    for md5 in clean_md5:
-        duplicate_files.pop(md5)
+    for key_md5 in duplicate_files.iterkeys():
+        if len(duplicate_files[key_md5]) == 1:
+            duplicate_files.Remove(key_md5)
 
     return duplicate_files
 
@@ -241,22 +181,18 @@ if __name__ == '__main__':
         print "TARGET: %s SOURCE: %s " % (my_target, my_source)
         my_missing_files, my_different_files = compare_2_dirs(my_target, my_source)
         # Printing results
-        print "================ Results ================"
-        print "Missing files from origin: %s" % len(my_missing_files)
-        show_bad_files(my_missing_files)
-        print "Different files in source: %s" % len(my_different_files)
-        show_bad_files(my_different_files)
+        # print "================ Results ================"
+        # print "Missing files from origin: %s" % len(my_missing_files)
+        # show_bad_files(my_missing_files)
+        # print "Different files in source: %s" % len(my_different_files)
+        # show_bad_files(my_different_files)
     # Compering a single directory
     elif len(sys.argv) == COMPARE_1_DIRS:
         # Getting directory path
         my_target = sys.argv[1]
         print "TARGET: %s" % my_target
-        a = new_get_dir_tree(my_target)
-        # my_duplicate_files = compare_1_dir(my_target)
-        # # Printing results
-        # print "================ Results ================"
-        # print "Duplicate files in target: %s" % len(my_duplicate_files)
-        # show_bad_files(my_duplicate_files)
+        my_duplicate_files = compare_1_dir(my_target)
+        print_duplicates(my_duplicate_files)
     else:
         print "Missing target path!"
         exit(1)
