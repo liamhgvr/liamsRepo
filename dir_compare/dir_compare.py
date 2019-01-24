@@ -89,11 +89,13 @@ def get_dir_tree(path):
                 full_name = os.path.join(root, filename)
                 short_name = full_name.replace(path, '')
 
+                # Get list of file attributes
                 cmd = "ls -l " + full_name
                 status, output = commands.getstatusoutput(cmd)
                 res = output.split(' ')
                 res = filter(None, res)
 
+                # Create dict entry for file
                 curr_item = {
                     KEY: short_name,
                     FULL_NAME: full_name,
@@ -130,7 +132,7 @@ def compare_1_dir(target_path):
         else:
             print "%s is a directory" % file_key
 
-    # Clean non dups
+    # Remove non-dups
     for key_md5 in duplicate_files.iterkeys():
         if len(duplicate_files[key_md5]) == 1:
             duplicate_files.Remove(key_md5)
@@ -141,7 +143,6 @@ def compare_1_dir(target_path):
 def compare_2_dirs(target_path, source_path):
     # return dict of dict
     # checks if files are missing from target
-
     target_dir_tree = get_dir_tree(target_path)
     source_dir_tree = get_dir_tree(source_path)
     missing_files = {}
@@ -169,26 +170,20 @@ def compare_2_dirs(target_path, source_path):
 
 
 if __name__ == '__main__':
-
-    # Set test defaults
+    # Defaults
     my_target = DEST_PATH
     my_source = SOURCE_PATH
 
-    # Compering 2 directories
     if len(sys.argv) == COMPARE_2_DIRS:
-        # Getting directories paths
         my_target = sys.argv[1], my_source = sys.argv[2]
         print "TARGET: %s SOURCE: %s " % (my_target, my_source)
         my_missing_files, my_different_files = compare_2_dirs(my_target, my_source)
-        # Printing results
         # print "================ Results ================"
         # print "Missing files from origin: %s" % len(my_missing_files)
         # show_bad_files(my_missing_files)
         # print "Different files in source: %s" % len(my_different_files)
         # show_bad_files(my_different_files)
-    # Compering a single directory
     elif len(sys.argv) == COMPARE_1_DIRS:
-        # Getting directory path
         my_target = sys.argv[1]
         print "TARGET: %s" % my_target
         my_duplicate_files = compare_1_dir(my_target)
