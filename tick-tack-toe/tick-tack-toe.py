@@ -14,12 +14,16 @@ players = {}
 DEF_USERS = 2
 DEF_SIZE = 3
 
+GO_RIGHT = {'r': 0, 'c': 1}
+GO_DOWN_RIGHT = {'r': 1, 'c': 1}
+GO_DOWN_LEFT = {'r': 1, 'c': -1}
+GO_DOWN = {'r': 1, 'c': 0}
 
 ways = {
-    'r': {'r': 0, 'c': 1},
-    'dr': {'r': 1, 'c': 1},
-    'dl': {'r': 1, 'c': -1},
-    'd': {'r': 1, 'c': 0},
+    'R': GO_RIGHT,
+    'DR': GO_DOWN_RIGHT,
+    'DL': GO_DOWN_LEFT,
+    'D': GO_DOWN,
 }
 
 
@@ -32,7 +36,7 @@ def cls():
 
 def build_board():
 
-    board_size = raw_input("Change board size (3 - 10): ")
+    board_size = raw_input("==> Change board size (3 - 10): ")
 
     if board_size == '' or MAX_SIZE < int(board_size) < 0:
         board_size = DEF_SIZE
@@ -59,7 +63,7 @@ def print_board(board):
 
 
 def get_player_num():
-    players_count = raw_input("Change players count (2 - 5): ")
+    players_count = raw_input("==> Change players count (2 - 5): ")
 
     if players_count == '' or MAX_SIZE < int(players_count) < 0:
         players_count = DEF_USERS
@@ -72,7 +76,7 @@ def init_players():
     num_of_users = get_player_num()
 
     for i in range(int(num_of_users)):
-        players[players_signs[i]] = raw_input("Enter player name: ")
+        players[players_signs[i]] = raw_input("==> Enter player name: ")
 
     # Print players
     print "Players:"
@@ -83,10 +87,10 @@ def init_players():
 def get_box_index():
     # Get index from user
     print u"Enter row number first \u2193, and then column number \u2192"
-    raw_user_index = raw_input("Choose box: ")
+    raw_user_index = raw_input("==> Choose box: ")
 
     while raw_user_index == '':
-        raw_user_index = raw_input("Choose box: ")
+        raw_user_index = raw_input("==> Choose box: ")
 
     if raw_user_index == EXIT:
         return raw_user_index
@@ -106,7 +110,7 @@ def change_box_value(board, index, user_sign):
     elif board_size < board[r][c] or 0 > board[r][c]:
         print "Bad input - Lost your turn!"
     else:
-        print "Box not empty!"
+        print "Box not empty! - Lost your turn!"
  
 
 def is_tie(board):
@@ -143,19 +147,19 @@ def is_win(board, curr_sign):
         for col in range(board_limit):
             if board[row][col] == curr_sign:
                 # Check R
-                if is_strick(board, row, col, curr_sign, 'r'):
+                if is_strick(board, row, col, curr_sign, 'R'):
                     print "Win right"
                     return True
                 # Check DR
-                elif is_strick(board, row, col, curr_sign, 'dr'):
+                elif is_strick(board, row, col, curr_sign, 'DR'):
                     print "Win down right"
                     return True
                 # Check DL
-                elif is_strick(board, row, col, curr_sign, 'dl'):
+                elif is_strick(board, row, col, curr_sign, 'DL'):
                     print "Win down left"
                     return True
                 # Check D
-                elif is_strick(board, row, col, curr_sign, 'd'):
+                elif is_strick(board, row, col, curr_sign, 'D'):
                     print "Win down"
                     return True
     return False
@@ -174,7 +178,9 @@ class bcolors:
 
 def play_game():
 
-    print "Welcome to Hell"
+    print "####################"
+    print "Hello Liam!"
+    print "####################"
 
     to_exit = False
     init_players()
@@ -185,7 +191,7 @@ def play_game():
     while to_exit is not True:
 
         cls()
-        print bcolors.OKBLUE + "==============="
+        print bcolors.OKBLUE + "========================="
 
         for curr_sign, curr_player in players.iteritems():
 
