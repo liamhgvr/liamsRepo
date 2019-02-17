@@ -8,7 +8,7 @@ WIN = 3
 MAX_USERS = 5
 MAX_SIZE = 10
 
-players_signs = ['O', 'X', 'Z', 'L', 'G']
+players_signs = ['O', 'X', 'Z', 'A', 'G']
 players = {}
 
 DEF_USERS = 2
@@ -134,8 +134,13 @@ def is_strick(board, r, c, sign, way_to_go):
         if board[r][c] == sign:
             strike = strike + 1
 
-        if strike == WIN:
-            return True
+        if len(board) > 4:
+            if strike == len(board)-1:
+                return True
+        else:
+            if strike == WIN:
+                return True
+                
     return False
 
 
@@ -196,7 +201,7 @@ def play_game():
         for curr_sign, curr_player in players.iteritems():
 
             # print board
-            print bcolors.OKBLUE + "Player: ", curr_player
+            print bcolors.OKBLUE + "Player: ", curr_sign
             print bcolors.OKBLUE + "Current board:"
             print_board(main_board)
 
