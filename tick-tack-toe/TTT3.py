@@ -13,6 +13,9 @@ class Cell:
     def change_cell_value(self, new_value):
         self.value = new_value
 
+    def is_free_cell(self):
+        return self.value == DEF_CELL_VALUE
+
 
 class Board:
 
@@ -34,11 +37,16 @@ class Board:
             print "\n"
 
     def select_cell(self, row, col, new_value):
-        # TODO: add is_empty_cell
-        self.board_layout[row][col].change_cell_value(new_value)
+        if self.board_layout[row][col].is_free_cell():
+            self.board_layout[row][col].change_cell_value(new_value)
+        else:
+            print "Turn lost"
 
 
 b = Board()
 b.print_board()
+b.select_cell(2, 0, 'S')
 b.select_cell(2, 1, 'X')
+b.select_cell(2, 2, '0')
+b.select_cell(2, 2, 'E')
 b.print_board()
