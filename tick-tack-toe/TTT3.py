@@ -8,33 +8,6 @@ DEF_MIN_PLAYERS = 2
 players = {}
 
 
-class Players:
-
-    def __init__(self):
-        self.players = {}
-        self.players_count = 3
-
-    def get_players_count(self):
-        return self.players_count
-
-    def get_players(self):
-
-        players_signs = ['O', 'X', 'Z', 'A', 'G']
-
-        for i in range(self.players_count):
-            user_name = raw_input("==> Enter player name: ")
-            self.players[players_signs[i]] = user_name
-
-        # Print players
-        print "Players:"
-        for sign, player_name in self.players.iteritems():
-            print sign, player_name
-
-    def get_next_player(self):
-        for sign, player_name in self.players.iteritems():
-            yield [sign, player_name]
-
-
 class Cell:
 
     def __init__(self, value=DEF_CELL_VALUE):
@@ -71,6 +44,33 @@ class Board:
             self.board_layout[row][col].change_cell_value(new_value)
         else:
             print "Turn lost"
+
+
+class Players:
+
+    def __init__(self):
+        self.players = {}
+        self.players_count = 3
+
+    def get_players_count(self):
+        return self.players_count
+
+    def get_players(self):
+
+        players_signs = ['O', 'X', 'Z', 'A', 'G']
+
+        for i in range(self.players_count):
+            user_name = raw_input("==> Enter player name: ")
+            self.players[players_signs[i]] = user_name
+
+        # Print players
+        print "Players:"
+        for sign, player_name in self.players.iteritems():
+            print sign, player_name
+
+    def get_next_player(self):
+        for sign, player_name in self.players.iteritems():
+            yield [sign, player_name]
 
 
 if __name__ == '__main__':
