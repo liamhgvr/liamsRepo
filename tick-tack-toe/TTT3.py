@@ -2,10 +2,22 @@
 
 
 DEF_CELL_VALUE = '_'
-DEF_SIZE = 3
-MAX_SIZE = 5
-DEF_MIN_PLAYERS = 2
-players = {}
+DEF_BOARD_SIZE = 3
+MAX_BOARD_SIZE = 5
+MIN_MUN_PLAYERS = 2
+MAX_MUN_PLAYERS = 5
+
+GO_RIGHT = {'r': 0, 'c': 1}
+GO_DOWN_RIGHT = {'r': 1, 'c': 1}
+GO_DOWN_LEFT = {'r': 1, 'c': -1}
+GO_DOWN = {'r': 1, 'c': 0}
+
+ways = {
+    'R': GO_RIGHT,
+    'DR': GO_DOWN_RIGHT,
+    'DL': GO_DOWN_LEFT,
+    'D': GO_DOWN,
+}
 
 
 class Cell:
@@ -22,14 +34,12 @@ class Cell:
 
 class Board:
 
-    def __init__(self, size=DEF_SIZE):
+    def __init__(self, size=DEF_BOARD_SIZE):
         self.size = size
-
         rows = [None] * size
         cols = rows * size
 
         self.board_layout = cols
-
         self.board_layout = [[Cell() for x in range(self.size)] for y in range(self.size)]
 
     def print_board(self):
@@ -43,7 +53,28 @@ class Board:
         if self.board_layout[row][col].is_free_cell():
             self.board_layout[row][col].change_cell_value(new_value)
         else:
-            print "Turn lost"
+            print "Lost turn"
+
+    def get_sign_indices(self, sign_to_find):
+        # Yield the locations of the given sign
+        board_limit = self.size-1
+        r, c = 0, 0
+
+        while r is not board_limit and c is not board_limit:
+            if self.board_layout is sign_to_find:
+                yield r, c
+            else:
+                if c is board_limit:
+                    r, c = +1, 0
+                else:
+                    c = +1
+
+    def is_win(self, sign_to_check):
+        board_limit = self.size-1
+        win_count = self.size
+        r, c = self.get_sign_indices(sign_to_check)
+
+        return False
 
 
 class Players:
@@ -78,10 +109,10 @@ if __name__ == '__main__':
     b = Board()
     b.print_board()
     b.select_cell(2, 0, 'S')
-    b.select_cell(2, 1, 'X')
-    b.select_cell(2, 2, '0')
-    b.select_cell(2, 2, 'E')
+    b.select_cell(2, 1, 'S')
+    b.select_cell(2, 2, 'S')
+    b.select_cell(1, 2, 'E')
     b.print_board()
 
-    p = Players()
-    p.get_players()
+    # p = Players()
+    # p.get_players()
