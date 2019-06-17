@@ -10,7 +10,8 @@ from stat import *
 
 COMPARE_2_DIRS = 3
 COMPARE_1_DIRS = 2
-
+GAP = "==========================================================\n"
+SCAN_TYPE = {'full': 2, 'md5': 1, 'name': 0}  # TODO: add scan type
 FULL_NAME = 'full_name'
 SHORT_NAME = 'short_name'
 KEY = 'key'
@@ -61,23 +62,17 @@ def get_name_from_path(path):
 #         raise e
 
 def execute_cmd(fullname):
-
+    # Executes the CMD command
     cmd = "ls -l '{}'".format(fullname)
     status, output = commands.getstatusoutput(cmd)
-
     print "- Execute CMD :", cmd
 
     if status is not 1:
         # print "- output:", output
         res = output.split(' ')
-        # to_combine = len(res)-7
-        # print "to_combine", to_combine
-        # for i in range(to_combine-1):
-        #     res[8] = res[8]+ res[8+i]
-        # #res = filter(None, res)
-
-    # print "- res:", res
-    return res
+        return res
+    else:
+        return False
 
 
 def get_file_md5(fname):
@@ -91,22 +86,18 @@ def get_file_md5(fname):
 
 def print_duplicates(file_dict):
     # displays the dup files
-
     print "================ Printing Duplicates ================"
-    print "====================================================="
+    print GAP
 
-    # for key, values in file_dict.iteritems():
-    #     print "==> %s: %s" % (key, values)
+    for key, values in file_dict.iteritems():
+        print "==> %s: %s" % (key, values)
 
 
 def get_dir_tree(path):
-
     # returns dict of dicts
     dir_tree = {}
-    curr_item = {}
-
     print "============= Getting Dir Tree ================"
-    print "==============================================="
+    print GAP
 
     # Prepare dict of items with: 'full_name' and 'short_name'
     for root, directories, filenames in os.walk(path):
@@ -115,39 +106,35 @@ def get_dir_tree(path):
                 full_name = root + "/" + filename
                 short_name = full_name.replace(path, '')
 
-                #print full_name, ' = ', short_name
-                #dir_tree[short_name] = curr_item
-                # print "- Creating key: %s" % short_name
-
                 # Get list of file attributes
                 res = execute_cmd(full_name)
 
                 dir_tree[short_name] = {
-                            #KEY: short_name,
-                            FULL_NAME: full_name,
-                            PERM: res[0],
-                            OWNER: res[2],
-                            GROUP: res[4],
-                            SIZE: res[6],
-                            MD5: get_file_md5(full_name),
-                            # DATE: res[8:11],
-                            ISFILE: is_file(full_name),
-                        }
+                    # KEY: short_name,
+                    ISFILE: is_file(full_name),
+                    FULL_NAME: full_name,
+                    MD5: get_file_md5(full_name),
+                    # PERM: res[0],
+                    # OWNER: res[2],
+                    # GROUP: res[4],
+                    # SIZE: res[6],
+                    # DATE: res[8:11],
+                }
 
-                print "- Attributes  :", dir_tree[short_name][OWNER], dir_tree[short_name][PERM], dir_tree[short_name][MD5]
+                # print "- Attributes  :", dir_tree[short_name][OWNER],
+                # dir_tree[short_name][PERM],dir_tree[short_name][MD5]
 
     print "- Dir tree len:", len(dir_tree)
-
     return dir_tree
 
 
 def compare_1_dir(target_path):
     # returns dict of dicts
+    c = 0
     duplicate_files = {}
     target_dir_tree = get_dir_tree(target_path)
-
     print "=============  Comparing One Directory ================"
-    print "======================================================="
+    print GAP
 
     # Create md5 map of files
     for file_key, file_values in target_dir_tree.iteritems():
@@ -161,15 +148,13 @@ def compare_1_dir(target_path):
         else:
             print "%s is a directory" % file_key
 
-    # Remove non-dups
-    c = 0
+    # Print Duplicates
     for key_md5, v in duplicate_files.iteritems():
         if len(duplicate_files[key_md5]) > 1:
             print "===> dup file {}: {}".format(key_md5, v)
             c += 1
 
-    print "- Total Dups:", c
-
+    print "- Total Duplicates:", c
     return duplicate_files
 
 
@@ -180,20 +165,17 @@ def compare_2_dirs(target_path, source_path):
     source_dir_tree = get_dir_tree(source_path)
     missing_files = {}
     different_files = {}
-
     print "============= Comparing Two Directories ================"
-    print "========================================================"
+    print GAP
 
     if len(source_dir_tree.keys()) != len(target_dir_tree.keys()):
         print "Size don't match!"
 
     for file_key in source_dir_tree:
-
         # check for missing files
         if file_key not in target_dir_tree.keys():
             print "moving %s to missing files dict" % file_key
             missing_files[file_key] = source_dir_tree[file_key]
-
         # check for different in files
         elif source_dir_tree[file_key][PERM] != target_dir_tree[file_key][PERM] or \
                 source_dir_tree[file_key][OWNER] != target_dir_tree[file_key][OWNER] or \
@@ -212,26 +194,24 @@ if __name__ == '__main__':
 
     my_target = DEST_PATH
     my_source = SOURCE_PATH
+    scan_type = 1
 
     if len(sys.argv) == COMPARE_2_DIRS:
         my_target = sys.argv[1], my_source = sys.argv[2]
-        print "======================================"
-        print "- Checking for duplicates between TARGET: %s SOURCE: %s " % (my_target, my_source)
-        print "======================================"
+        print GAP, "- Checking for duplicates between TARGET: %s SOURCE: %s " % (my_target, my_source)
+        print GAP
         my_missing_files, my_different_files = compare_2_dirs(my_target, my_source)
         # print "================ Results ================"
         # print "Missing files from origin: %s" % len(my_missing_files)
         # show_bad_files(my_missing_files)
         # print "Different files in source: %s" % len(my_different_files)
         # show_bad_files(my_different_files)
-    elif len(sys.argv) == COMPARE_1_DIRS:
-        # Checking for duplicates in file path
+    elif len(sys.argv) == COMPARE_1_DIRS:  # Checking for duplicates in a single directory
         my_target = sys.argv[1]
-        print "======================================"
-        print " - Checking for duplicates in target path: %s" % my_target
-        print "======================================"
-        my_duplicate_files = compare_1_dir(my_target)
-        print_duplicates(my_duplicate_files)
+        print GAP, "- Checking for duplicates in target path: %s" % my_target
+        print GAP
+        my_duplicate_files = compare_1_dir(my_target)  # scan_type)
+        # print_duplicates(my_duplicate_files)
     else:
         print "Missing target path!"
         exit(1)
