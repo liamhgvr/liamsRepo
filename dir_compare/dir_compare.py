@@ -8,6 +8,7 @@ import sys
 import commands
 from stat import *
 
+
 COMPARE_2_DIRS = 3
 COMPARE_1_DIRS = 2
 GAP = "==========================================================\n"
@@ -21,7 +22,7 @@ GROUP = 'group'
 SIZE = 'size'
 DATE = 'date'
 MD5 = 'md5'
-ISFILE = 'is_file'
+IS_FILE = 'is_file'
 
 files_2_ignore = [".ipynb_checkpoints", "Untitled.ipynb", ".DS_Store"]
 
@@ -38,6 +39,14 @@ def get_name_from_path(path):
     return name
 
 
+def get_file_md5(fname):
+    # return string
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
 # def set_permissions(src_file):
 #     dest_file = DEST_PATH + src_file.replace(SOURCE_PATH, '')
 #     perm = get_perm(src_file)
@@ -48,8 +57,7 @@ def get_name_from_path(path):
 #         os.chmod(dest_file, perm)
 #     except Exception as e:
 #         raise e
-
-
+#
 # def set_owner_group(src_file):
 #     dest_file = DEST_PATH + src_file.replace(SOURCE_PATH, '')
 #     owner = get_owner(src_file)
@@ -60,6 +68,7 @@ def get_name_from_path(path):
 #         os.chown(dest_file, owner, group)
 #     except Exception as e:
 #         raise e
+
 
 def execute_cmd(fullname):
     # Executes the CMD command
@@ -75,31 +84,32 @@ def execute_cmd(fullname):
         return False
 
 
-def get_file_md5(fname):
-    # return string
-    hash_md5 = hashlib.md5()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
+def print_duplicates(dup_dict):
+    print "================ Printing Duplicates ================"
+    print GAP
+    c = 0
+    for key_md5, v in dup_dict.iteritems():
+        if len(v) > 1:
+            # print v[0],  # split('/')[-1],
+            print "===> dup file {}: {}".format(key_md5, v)
+            c += 1
+    print "- Total Duplicates:", c
 
 
-def print_duplicates(file_dict):
+def print_duplicates2(file_dict):
     # displays the dup files
     print "================ Printing Duplicates ================"
     print GAP
-
     for key, values in file_dict.iteritems():
         print "==> %s: %s" % (key, values)
 
 
 def get_dir_tree(path):
-    # returns dict of dicts
+    # Prepare dict of items key: SHORT_NAME
     dir_tree = {}
     print "============= Getting Dir Tree ================"
     print GAP
 
-    # Prepare dict of items with: 'full_name' and 'short_name'
     for root, directories, filenames in os.walk(path):
         for filename in filenames:
             if filename not in files_2_ignore:  # NOT WORKING
@@ -111,7 +121,7 @@ def get_dir_tree(path):
 
                 dir_tree[short_name] = {
                     # KEY: short_name,
-                    ISFILE: is_file(full_name),
+                    IS_FILE: is_file(full_name),
                     FULL_NAME: full_name,
                     MD5: get_file_md5(full_name),
                     # PERM: res[0],
@@ -120,7 +130,6 @@ def get_dir_tree(path):
                     # SIZE: res[6],
                     # DATE: res[8:11],
                 }
-
                 # print "- Attributes  :", dir_tree[short_name][OWNER],
                 # dir_tree[short_name][PERM],dir_tree[short_name][MD5]
 
@@ -129,32 +138,27 @@ def get_dir_tree(path):
 
 
 def compare_1_dir(target_path):
-    # returns dict of dicts
-    c = 0
+    # Takes a dict of SHORT_NAME: {FILE_VALUES}
+    # Creates a dict of MDS: [SHORT_NAME, SHORT_NAME]
+    duplicate_keys = []
     duplicate_files = {}
     target_dir_tree = get_dir_tree(target_path)
     print "=============  Comparing One Directory ================"
     print GAP
 
-    # Create md5 map of files
     for file_key, file_values in target_dir_tree.iteritems():
-        if file_values[ISFILE]:
-            curr_md5 = file_values[MD5]
+        if file_values[IS_FILE]:
             # Check for duplicates
-            if curr_md5 in duplicate_files.keys():
-                duplicate_files[curr_md5].append(file_key)
+            if file_values[MD5] not in duplicate_files:
+                duplicate_files[file_values[MD5]] = [file_key]
             else:
-                duplicate_files[curr_md5] = [file_key]
+                duplicate_files[file_values[MD5]].append(file_key)
+                duplicate_keys.append(file_values[MD5])
         else:
             print "%s is a directory" % file_key
 
-    # Print Duplicates
-    for key_md5, v in duplicate_files.iteritems():
-        if len(duplicate_files[key_md5]) > 1:
-            print "===> dup file {}: {}".format(key_md5, v)
-            c += 1
-
-    print "- Total Duplicates:", c
+    # Print and return duplicates
+    print_duplicates(duplicate_files)
     return duplicate_files
 
 
