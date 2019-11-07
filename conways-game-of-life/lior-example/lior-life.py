@@ -9,6 +9,7 @@ DEAD = 0
 
 
 class Game(object):
+
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns

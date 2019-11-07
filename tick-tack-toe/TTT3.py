@@ -49,9 +49,12 @@ class Board:
                 print cell.value + " ",
             print "\n"
 
-    def select_cell(self, row, col, new_value):
-        if self.board_layout[row][col].is_free_cell():
-            self.board_layout[row][col].change_cell_value(new_value)
+    def select_cell(self, new_value):
+        x = int(raw_input("==> Enter x: "))
+        y = int(raw_input("==> Enter y: "))
+
+        if self.board_layout[x][y].is_free_cell():
+            return self.board_layout[x][y].change_cell_value(new_value)
         else:
             print "Lost turn"
 
@@ -81,12 +84,12 @@ class Players:
 
     def __init__(self):
         self.players = {}
-        self.players_count = 3
+        self.players_count = 2
 
     def get_players_count(self):
         return self.players_count
 
-    def get_players(self):
+    def init_players(self):
 
         players_signs = ['O', 'X', 'Z', 'A', 'G']
 
@@ -99,20 +102,48 @@ class Players:
         for sign, player_name in self.players.iteritems():
             print sign, player_name
 
+    def get_players_dict(self):
+            return self.players
+
     def get_next_player(self):
         for sign, player_name in self.players.iteritems():
             yield [sign, player_name]
 
 
+class TheGame:
+
+    def __init__(self):
+        self.game_count = 0
+
+    def play_game(self):
+        gc_players = Players()
+        gc_players.init_players()
+
+        gc_board = Board()
+
+        fin = False
+
+        while not fin:
+
+            for sign, name in gc_players.get_players_dict().iteritems():
+                print ":"
+                gc_board.select_cell(sign)
+
+                if gc_board.is_win(sign):
+                    print "%s has won!" % name
+                    fin = True
+                    #break
+
+
 if __name__ == '__main__':
 
-    b = Board()
-    b.print_board()
-    b.select_cell(2, 0, 'S')
-    b.select_cell(2, 1, 'S')
-    b.select_cell(2, 2, 'S')
-    b.select_cell(1, 2, 'E')
-    b.print_board()
+    # b = Board()
+    # b.print_board()
+    # b.select_cell(2, 0, 'S')
+    # b.select_cell(2, 1, 'S')
+    # b.select_cell(2, 2, 'S')
+    # b.select_cell(1, 2, 'E')
+    # b.print_board()
 
-    # p = Players()
-    # p.get_players()
+    g = TheGame()
+    g.play_game()
