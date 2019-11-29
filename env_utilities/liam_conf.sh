@@ -2,6 +2,7 @@
 ##########
 # Aliases
 ##########
+alias ll='ls -l'
 alias lla='ll -a'
 alias zshconfig="vim ~/.zshrc"
 alias envconfig="vim ~/env.sh"
@@ -18,17 +19,23 @@ alias test='ssh -i ~/.ssh/keys/test_key.pem  ubuntu@52.17.198.7'
 alias ttt='python ~/git/liamsRepo/tick-tack-toe/tick-tack-toe.py'
 alias jeff='ssh -i .ssh/keys/test_key.pem ubuntu@52.17.198.7'
 alias dircomp='python ~/git/liamsRepo/dir_compare/dir_compare.py'
+alias jeff='ssh -i .ssh/keys/keyPair1.pem ubuntu@18.202.76.201'
+alias hellojeff='aws ec2 start-instances --instance-ids i-06ec3319a596779f8'
+alias byejeff='aws ec2 stop-instances --instance-ids i-06ec3319a596779f8'
+alias setme='source git/liamsRepo/env_utilities/liam_conf.sh'
+alias setliam='sudo vim git/liamsRepo/env_utilities/liam_conf.sh'
 
 #########
 # Export
 #########
 export PATH="/usr/local/share/python:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$/Users/liam/Library/Python/2.7/bin:$PATH"
-export PATH="/Users/liam/terraform_ex:$PATH"
+export PATH="/Users/liam/terraform_bin:$PATH"
 export PATH="/usr/local/opt/ncurses/bin:$PATH"
 export PYTHONPATH="/usr/local/opt/python@2/bin/python2.7:$PYTHONPATH"
 #export EDITOR='subl -w'
 export PYTHONPATH=$PYTHONPATH:/usr/local/bin/python
+VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
 # export MANPATH="/usr/local/man:$MANPATH"
 export JAVA_HOME="`/usr/libexec/java_home -v 1.8`"
 
