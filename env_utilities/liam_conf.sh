@@ -7,7 +7,7 @@ alias lla='ll -a'
 alias zshconfig="vim ~/.zshrc"
 alias envconfig="vim ~/env.sh"
 alias path="echo $PATH"
-alias terr="terraform"
+alias ter="terraform"
 alias geoip="/usr/local/share/GeoIP/"
 alias tellavista='.ssh/keys/tellavista.pem'
 alias workoff='deactivate'
@@ -24,17 +24,16 @@ alias hellojeff='aws ec2 start-instances --instance-ids i-06ec3319a596779f8'
 alias byejeff='aws ec2 stop-instances --instance-ids i-06ec3319a596779f8'
 alias setme='source git/liamsRepo/env_utilities/liam_conf.sh'
 alias setliam='sudo vim git/liamsRepo/env_utilities/liam_conf.sh'
+alias py3="python3"
 
 #########
 # Export
 #########
-export PATH="/usr/local/share/python:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-export PATH="$/Users/liam/Library/Python/2.7/bin:$PATH"
-export PATH="/Users/liam/terraform_bin:$PATH"
-export PATH="/usr/local/opt/ncurses/bin:$PATH"
-export PYTHONPATH="/usr/local/opt/python@2/bin/python2.7:$PYTHONPATH"
+export PATH="$PATH:/usr/local/bin/python3"
+export PATH="$PATH:/Users/liam/git/terraform"
+export PATH="$PATH:/usr/local/opt/ncurses/bin"
+export PYTHONPATH="/usr/local/bin/python3"
 #export EDITOR='subl -w'
-export PYTHONPATH=$PYTHONPATH:/usr/local/bin/python
 VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
 # export MANPATH="/usr/local/man:$MANPATH"
 export JAVA_HOME="`/usr/libexec/java_home -v 1.8`"
